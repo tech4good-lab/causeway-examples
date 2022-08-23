@@ -9,6 +9,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 // Containers
 
@@ -27,6 +28,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     MatFormFieldModule,
     MatInputModule,
     DragDropModule,
+    MatProgressSpinnerModule,
   ],
   declarations: [
     // Containers
@@ -42,6 +44,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     MatFormFieldModule,
     MatInputModule,
     DragDropModule,
+    MatProgressSpinnerModule,
     // Containers
     // Components
     // Pipes

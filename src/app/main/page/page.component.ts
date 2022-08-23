@@ -11,11 +11,12 @@ import { User } from '../../core/store/user/user.model';
 import { PageSelectors } from './+state/page.selectors';
 import { QuarterData, QuarterGoalInForm } from './+state/page.model';
 import { LoadData, Cleanup } from './+state/page.actions';
-import { RouterNavigate } from '../../core/store/app.actions';
+import { ActionFlow, RouterNavigate } from '../../core/store/app.actions';
 import { UpdateUser } from '../../core/store/user/user.actions';
 import { QuarterGoalActionTypes, UpdateQuarterGoal } from '../../core/store/quarter-goal/quarter-goal.actions';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ModalComponent } from './modal/modal.component';
+import { ShowSnackbar } from '../../core/snackbar/snackbar.actions';
 
 @Component({
   selector: 'app-page',
@@ -123,19 +124,47 @@ export class PageComponent implements OnInit {
     this.saveGoals$.pipe(
       takeUntil(this.unsubscribe$),
     ).subscribe(({ goals, loading$ }) => {
-      // Dispatch the UpdateQuarterGoal actions (simple)
-      for (let i=0; i < goals.length; i++) {
-        let g = goals[i];
-        this.store.dispatch(
-          new UpdateQuarterGoal(g.__id, {
+
+      // Define the action sets we'd like to dispatch
+      const actionSets = goals.map((g, i) => {
+        return {
+          action: new UpdateQuarterGoal(g.__id, { 
             text: g.text,
             order: i + 1,
           }, this.containerId),
-        );
-      }
-
-      // Close the modal
-      this.dialogRef.close();
+          responseActionTypes: {
+            success: QuarterGoalActionTypes.UPDATE_SUCCESS,
+            failure: QuarterGoalActionTypes.UPDATE_FAIL,
+          },
+        };
+      });
+      
+      // Dispatch an Action Flow with those actionSets
+      // as well as the loading$, successActionFn, and failActionFn
+      this.store.dispatch(
+        new ActionFlow({
+          actionSets,
+          loading$,
+          successActionFn: (actionSetResponses) => {
+            this.dialogRef.close();
+            return [
+              new ShowSnackbar({
+                message: 'Updated quarter goals',
+                config: { duration: 3000 },
+              })
+            ];
+          },
+          failActionFn: (actionSetResponses) => {
+            this.dialogRef.close();
+            return [
+              new ShowSnackbar({
+                message: 'Failed to update quarter goals',
+                config: { duration: 3000 },
+              }),
+            ];
+          },
+        })
+      );
     });
 
     // --------------- LOAD DATA ---------------------------
