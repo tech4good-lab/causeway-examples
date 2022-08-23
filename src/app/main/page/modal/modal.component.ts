@@ -1,5 +1,8 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter, Inject } from '@angular/core';
 import { ModalAnimations } from './modal.animations';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { QuarterData, QuarterGoalInForm } from '../+state/page.model';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-modal',
@@ -19,7 +22,16 @@ export class ModalComponent implements OnInit {
 
   // --------------- HELPER FUNCTIONS AND OTHER ----------
 
-  constructor() { }
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: {
+      quarterData: QuarterData,
+      updateGoals: (
+        goals: [QuarterGoalInForm, QuarterGoalInForm, QuarterGoalInForm],
+        loading$: BehaviorSubject<boolean>,
+      ) => void,
+    },
+    private dialogRef: MatDialogRef<ModalComponent>,
+  ) { }
 
   ngOnInit(): void {
   }

@@ -13,6 +13,8 @@ import { QuarterData, QuarterGoalInForm } from './+state/page.model';
 import { LoadData, Cleanup } from './+state/page.actions';
 import { RouterNavigate } from '../../core/store/app.actions';
 import { UpdateUser } from '../../core/store/user/user.actions';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { ModalComponent } from './modal/modal.component';
 
 @Component({
   selector: 'app-page',
@@ -32,6 +34,9 @@ export class PageComponent implements OnInit {
   );
   
   // --------------- LOCAL AND GLOBAL STATE --------------
+
+  /** For storing the dialogRef in the opened modal. */
+  dialogRef: MatDialogRef<any>;
 
   // --------------- DB ENTITY DATA ----------------------
 
@@ -86,7 +91,8 @@ export class PageComponent implements OnInit {
     private route: ActivatedRoute,
     private selectors: PageSelectors,
     private store: Store<fromStore.State>,
-    private db: FirebaseService
+    private db: FirebaseService,
+    private dialog: MatDialog,
   ) {
   }
 
@@ -98,14 +104,24 @@ export class PageComponent implements OnInit {
       withLatestFrom(this.quarterData$),
       takeUntil(this.unsubscribe$),
     ).subscribe(([_, quarterData]) => {
-      console.log("in open edit modal");
+      this.dialogRef = this.dialog.open(ModalComponent, {
+        height: '366px',
+        width: '100%',
+        maxWidth: '500px',
+        data: {
+          quarterData: quarterData,
+          updateGoals: (goals: [QuarterGoalInForm, QuarterGoalInForm, QuarterGoalInForm], loading$: BehaviorSubject<boolean>) => {
+            this.saveGoals$.next({ goals, loading$ });
+          },
+        },
+      });
     });
 
     /** Handle save goals events. */
     this.saveGoals$.pipe(
       takeUntil(this.unsubscribe$),
     ).subscribe(({ goals, loading$ }) => {
-      console.log("in save goals");
+      this.dialogRef.close();
     });
 
     // --------------- LOAD DATA ---------------------------
