@@ -1,4 +1,4 @@
-<div class="widget">
+<div class="widget" *ngIf="quarterData">
   <div class="header">
     <div class="title">{{ getTerm() }} '{{ quarterData.startTime | date:'yy' }} Goals</div>
     <div class="date">{{ quarterData.startTime | date:'M' }}/{{ quarterData.startTime | date:'d' }} - {{ quarterData.endTime | date:'M' }}/{{ quarterData.endTime | date:'d' }}</div>

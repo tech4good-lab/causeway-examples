@@ -6,9 +6,10 @@ import * as fromAuth from '../../core/store/auth/auth.reducer';
 import { PageAnimations } from './page.animations';
 import { FirebaseService } from '../../core/firebase/firebase.service';
 import { tap, filter, withLatestFrom, take, takeUntil, map, subscribeOn } from 'rxjs/operators';
-import { distinctUntilChanged, interval, Observable, Subject, BehaviorSubject, combineLatest } from 'rxjs';
+import { of, distinctUntilChanged, interval, Observable, Subject, BehaviorSubject, combineLatest } from 'rxjs';
 import { User } from '../../core/store/user/user.model';
 import { PageSelectors } from './+state/page.selectors';
+import { QuarterData } from './+state/page.model';
 import { LoadData, Cleanup } from './+state/page.actions';
 import { RouterNavigate } from '../../core/store/app.actions';
 import { UpdateUser } from '../../core/store/user/user.actions';
@@ -24,6 +25,15 @@ export class PageComponent implements OnInit {
 
   // --------------- ROUTE PARAMS & CURRENT USER ---------
 
+  /** The currently signed in user. */
+  currentUser$: Observable<User> = of({
+    __id: 'test-user',
+    email: 'test@sample.com',
+    name: 'Test User',
+    photoURL: 'http://placekitten.com/100/100',
+    onboardingState: 1,
+  });
+  
   // --------------- LOCAL AND GLOBAL STATE --------------
 
   // --------------- DB ENTITY DATA ----------------------
@@ -32,10 +42,65 @@ export class PageComponent implements OnInit {
   containerId: string = this.db.createId();
 
   // --------------- DATA BINDING ------------------------
+  
+  /** Raw time in milliseconds from 1970/01/01 00:00:00:000 **/
+  currentDateTime$: Observable<number> = interval(1000).pipe(
+    map(() => Date.now()),
+  );
+
+  /** Current quarter needed to select the right quarter from DB. */
+  currentQuarterStartTime$: Observable<number> = this.currentDateTime$.pipe(
+    map((now) => this.dateToQuarterStartTime(now)),
+    distinctUntilChanged(),
+  );
+
+  /** Get the quarter data. */
+  quarterData$: Observable<QuarterData> = of({
+    __id: 'f22',
+    startTime: 1664607600000,
+    endTime: 1672559999999,
+    quarterGoals: [
+      {
+        __id: 'qg1',
+        __quarterId: 'f22',
+        __userId: 'test-user',
+        text: 'Finish cover letters',
+        completed: false,
+        order: 1,
+      },
+      {
+        __id: 'qg2',
+        __quarterId: 'f22',
+        __userId: 'test-user',
+        text: 'Apply to internships',
+        completed: false,
+        order: 2,
+      },
+      {
+        __id: 'qg3',
+        __quarterId: 'f22',
+        __userId: 'test-user',
+        text: 'Technical interview prep!',
+        completed: false,
+        order: 3,
+      },
+    ],
+  });
 
   // --------------- EVENT BINDING -----------------------
 
   // --------------- HELPER FUNCTIONS AND OTHER ----------
+
+  /** Helper function for converting timestamp to quarter start time. */
+  dateToQuarterStartTime(dateTime: number): number {
+    const date = new Date(dateTime);
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    let startingMonthOfQuarter = Math.floor(month / 3) * 3;
+    const startingDateOfQuarter = new Date(year, startingMonthOfQuarter, 1);
+
+    return startingDateOfQuarter.getTime();
+  }
 
   /** Unsubscribe observable for subscriptions. */
   unsubscribe$: Subject<void> = new Subject();
