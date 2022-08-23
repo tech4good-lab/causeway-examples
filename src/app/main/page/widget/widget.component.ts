@@ -18,6 +18,21 @@ export class WidgetComponent implements OnInit {
 
   // --------------- DATA BINDING ------------------------
 
+  /** Get day suffix. */
+  daySuffix() {
+    const date = new Date(this.time);
+    const day = date.getDate();
+    if (day === 1 || day === 21 || day === 31) {
+      return 'st';
+    } else if (day === 2 || day === 22) {
+      return 'nd';
+    } else if (day === 3 || day === 23) {
+      return 'rd';
+    } else {
+      return 'th';
+    }
+  }
+
   // --------------- EVENT BINDING -----------------------
 
   // --------------- HELPER FUNCTIONS AND OTHER ----------

@@ -1,10 +1,10 @@
-<div class="widget">
+<div class="widget" *ngIf="time">
   <div class="time-section">
-    <div class="time">8:32</div>
+    <div class="time">{{ time | date:'h:mm' }}</div>
     <div class="time-small-section">
-      <div class="am-pm">AM</div>
-      <div class="seconds">35</div>
+      <div class="am-pm">{{ time | date:'a' }}</div>
+      <div class="seconds">{{ time | date:'ss' }}</div>
     </div>
   </div>
-  <div class="date">September 27th, 2018</div>
+  <div class="date">{{ time | date:'MMMM d' }}{{ daySuffix() }}{{ time | date:', y' }}</div>
 </div>
