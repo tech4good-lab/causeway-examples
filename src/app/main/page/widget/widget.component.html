@@ -1,21 +1,13 @@
 <div class="widget">
   <div class="header">
-    <div class="title">Fall '22 Goals</div>
-    <div class="date">9/21 - 12/13</div>
+    <div class="title">{{ getTerm() }} '{{ quarterData.startTime | date:'yy' }} Goals</div>
+    <div class="date">{{ quarterData.startTime | date:'M' }}/{{ quarterData.startTime | date:'d' }} - {{ quarterData.endTime | date:'M' }}/{{ quarterData.endTime | date:'d' }}</div>
   </div>
   <div class="tasks">
-    <div class="task">
-      <div class="number">1</div>
-      <div class="text">Finish cover letters</div>
-    </div>
-    <div class="task">
-      <div class="number">2</div>
-      <div class="text">Apply to internships</div>
-    </div>
-    <div class="task">
-      <div class="number">3</div>
-      <div class="text">Technical interview prep</div>
+    <div class="task" *ngFor="let goal of quarterData.quarterGoals">
+      <div class="number">{{ goal.order }}</div>
+      <div class="text">{{ goal.text }}</div>
     </div>
   </div>
-  <img class="pencil" src="/assets/img/edit.svg" width="26" height="26"/>
+  <img class="pencil" src="/assets/img/edit.svg" width="26" height="26" (click)="edit()" />
 </div>
