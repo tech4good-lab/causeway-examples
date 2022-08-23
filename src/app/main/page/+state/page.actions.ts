@@ -9,7 +9,10 @@ export enum PageActionTypes {
 /** Action for loading required DB data. */
 export class LoadData implements Action {
   readonly type = PageActionTypes.LOAD_DATA;
-  constructor(public correlationId: string) {}
+  constructor(public payload: {
+    quarterStartTime: number,
+    currentUser: User,
+  }, public correlationId: string) {}
 }
 
 /** Action for cleaning up loading subscriptions. */

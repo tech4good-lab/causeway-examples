@@ -12,6 +12,8 @@ import { ActionFlow, RouterNavigate, LoadAction, Unsubscribe } from '../../../co
 import { PageActionTypes, Cleanup, LoadData } from './page.actions';
 
 import { StreamUser } from '../../../core/store/user/user.actions';
+import { StreamQuarter } from '../../../core/store/quarter/quarter.actions';
+import { StreamQuarterGoal } from '../../../core/store/quarter-goal/quarter-goal.actions';
 
 @Injectable()
 export class PageEffects {
@@ -21,7 +23,13 @@ export class PageEffects {
       ofType<LoadData>(PageActionTypes.LOAD_DATA),
       mergeMap((action: LoadData) => {
         const loadId = action.correlationId;
-        return [];
+        const quarterId = `${action.payload.quarterStartTime}`;
+        const currentUser = action.payload.currentUser;
+
+        return [
+          new StreamQuarter([['__id', '==', quarterId]], {}, loadId),
+          new StreamQuarterGoal([['__userId', '==', currentUser.__id], ['__quarterId', '==', quarterId]], {}, loadId),
+        ];
       })
     )
   );

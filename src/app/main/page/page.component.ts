@@ -26,13 +26,10 @@ export class PageComponent implements OnInit {
   // --------------- ROUTE PARAMS & CURRENT USER ---------
 
   /** The currently signed in user. */
-  currentUser$: Observable<User> = of({
-    __id: 'test-user',
-    email: 'test@sample.com',
-    name: 'Test User',
-    photoURL: 'http://placekitten.com/100/100',
-    onboardingState: 1,
-  });
+  currentUser$: Observable<User> = this.store.pipe(
+    select(fromAuth.selectUser),
+    filter((user) => user !== null),
+  );
   
   // --------------- LOCAL AND GLOBAL STATE --------------
 
@@ -55,37 +52,11 @@ export class PageComponent implements OnInit {
   );
 
   /** Get the quarter data. */
-  quarterData$: Observable<QuarterData> = of({
-    __id: 'f22',
-    startTime: 1664607600000,
-    endTime: 1672559999999,
-    quarterGoals: [
-      {
-        __id: 'qg1',
-        __quarterId: 'f22',
-        __userId: 'test-user',
-        text: 'Finish cover letters',
-        completed: false,
-        order: 1,
-      },
-      {
-        __id: 'qg2',
-        __quarterId: 'f22',
-        __userId: 'test-user',
-        text: 'Apply to internships',
-        completed: false,
-        order: 2,
-      },
-      {
-        __id: 'qg3',
-        __quarterId: 'f22',
-        __userId: 'test-user',
-        text: 'Technical interview prep!',
-        completed: false,
-        order: 3,
-      },
-    ],
-  });
+  quarterData$: Observable<QuarterData> = this.selectors.selectQuarterData(
+    this.currentQuarterStartTime$,
+    this.currentUser$,
+    this.containerId,
+  );
 
   // --------------- EVENT BINDING -----------------------
 
@@ -118,6 +89,17 @@ export class PageComponent implements OnInit {
 
     // --------------- LOAD DATA ---------------------------
     // Once everything is set up, load the data for the role.
+    combineLatest(this.currentQuarterStartTime$, this.currentUser$).pipe(
+      takeUntil(this.unsubscribe$),
+    ).subscribe(([quarterStartTime, currentUser]) => {
+      this.store.dispatch(
+        new LoadData({
+          quarterStartTime,
+          currentUser,
+        }, this.containerId)
+      );
+    });
+
   }
 
   ngOnDestroy() {
