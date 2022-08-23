@@ -33,6 +33,11 @@ export class PageComponent implements OnInit {
 
   // --------------- DATA BINDING ------------------------
 
+  /** Raw time in milliseconds from 1970/01/01 00:00:00:000 **/
+  currentDateTime$: Observable<number> = interval(1000).pipe(
+    map(() => Date.now()),
+  );
+
   // --------------- EVENT BINDING -----------------------
 
   // --------------- HELPER FUNCTIONS AND OTHER ----------
