@@ -114,6 +114,7 @@ export class PageComponent implements OnInit {
             this.saveGoals$.next({ goals, loading$ });
           },
         },
+        panelClass: 'dialog-container',
       });
     });
 
