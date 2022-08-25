@@ -89,6 +89,14 @@ export class MockDBService {
           order: 3,
         },
       ],
+      longTermGoals: [
+        {
+          __id: 'ltg',
+          __userId: 'test-user',
+          oneYear: 'Secure SWE or UX Engineering Internship',
+          fiveYear: 'SWE with UX/Design/Animation oriented work',
+        }
+      ]
     };
   }
 
