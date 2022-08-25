@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { WidgetAnimations } from './widget.animations';
+import { OnboardingState } from '../../../core/store/user/user.model';
 
 @Component({
   selector: 'app-widget',
@@ -10,6 +11,9 @@ import { WidgetAnimations } from './widget.animations';
 })
 export class WidgetComponent implements OnInit {
   // --------------- INPUTS AND OUTPUTS ------------------
+
+  /** The user. */
+  @Input() state: OnboardingState = OnboardingState.WELCOME;
 
   // --------------- LOCAL AND GLOBAL STATE --------------
 
