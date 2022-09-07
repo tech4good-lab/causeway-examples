@@ -1,1 +1,12 @@
-<div class="widget">widget!</div>
+<div class = "long-term-goals-card">
+    <div class="title"> Long-term Goals</div>
+    <div class="goals">
+        <div class="year"> 1 year
+            <div class="text">{{longTermGoal.oneYear}}</div>
+        </div>
+        <div class="year"> 5 year
+            <div class="text">{{longTermGoal.fiveYear}}</div>
+        </div>
+    </div>
+    <img class="pencil" src="/assets/img/pencil-logo.svg" width="26" height="26" (click)="edit()">
+</div>
