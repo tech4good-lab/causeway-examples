@@ -1,5 +1,71 @@
-.widget {
-  // replace this with your code
-  border: black 1px solid;
-  background-color: white;
+@import url('//fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap');
+
+* {
+  font-family: Montserrat;
+}
+.Long-TermG {
+  width: auto;
+  height: 675px;
+  justify-content: space-evenly;
+  padding: 1em;
+  box-shadow: 1px 4px 4px rgb(105, 0, 0);
+  border-radius: 25px;
+
+  .title {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    flex-shrink: 0;
+    margin-bottom: 5px;
+    padding: 20px 5px;
+    font-weight: bold;
+    font-size: 50px;
+    color: rgb(105, 0, 0);
+    margin-bottom: 5px;
+  }
+  
+
+
+  .oneyear {
+    font-size: 35px;
+    padding: 10px 25px;
+    font-weight: bold;
+    color: black;
+    border-left: 5px solid rgb(105, 0, 0);
+    height: 50px;
+  }
+
+  .goal1{;
+    font-size: 25px;
+    padding: 7px 35px;
+    font-weight: normal;
+    color: gray;
+    border-left: 5px solid rgb(105, 0, 0);
+    height: 50px;
+  }
+
+  .fiveyear {
+    margin-top: 65px;
+    font-size: 35px;
+    padding: 10px 25px;
+    font-weight: bold;
+    color: black;
+    border-left: 5px solid rgb(105, 0, 0);
+    height: 50px;
+  }
+
+  .goal2{
+    font-size: 25px;
+    padding: 7px 35px;
+    font-weight: normal;
+    color: gray;
+    border-left: 5px solid rgb(105, 0, 0);
+    height: 50px;
+  }
+
+  .pencil{
+    position: absolute;
+    bottom: 125px;
+    right: 125px;
+  }
 }
