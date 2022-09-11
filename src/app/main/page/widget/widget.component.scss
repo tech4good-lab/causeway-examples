@@ -1,5 +1,91 @@
+@import url(//fonts.googleapis.com/css?family=Montserrat);
+
+* {
+  font-family: Montserrat;
+}
+
 .widget {
-  // replace this with your code
-  border: black 1px solid;
-  background-color: white;
+  width: 267px;
+  height: 310px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  padding: 1em;
+  background: #ffffff;
+  box-shadow: 0px 4px 4px #d3e1da;
+  border-radius: 10px;
+
+  .title {
+    width: 204px;
+    height: 23px;
+    font-weight: 600;
+    font-size: 22px;
+    margin-bottom: 25px;
+    color: #EE8B72;
+  }
+
+  .goalo {
+    .lineo {
+      width: 2px;
+      background-color: #EE8B72;
+      float: left;
+    }
+    .yearo {
+      color: #ee8b72;
+      width: 161px;
+      height: 23px;
+      font-weight: 600;
+      font-size: 18px; 
+      padding-left: 14px;
+      padding-right: 68px;
+      padding-bottom: 6px;
+    }
+    .texto {
+      color:#4B5853;
+      width: 204px;
+      height: 41px;
+      font-weight: 600;
+      font-size: 16px; 
+      padding-top: 6px;
+      padding-left: 14px;
+      margin-right: 25px;
+      margin-bottom: 30px;
+    }
+  }
+  .goalt {
+    .linet {
+      width: 2px;
+      background-color: #EE8B72;
+      float: left;
+    }
+    .yeart {
+      color: #ee8b72;
+      width: 161px;
+      height: 23px;
+      font-weight: 600;
+      font-size: 18px; 
+      padding-left: 14px;
+      padding-right: 68px;
+      padding-bottom: 6px;
+    }
+    .textt {
+      color:#4B5853;
+      width: 215px;
+      height: 41px;
+      font-weight: 600;
+      font-size: 16px; 
+      padding-top: 6px;
+      padding-left: 14px;
+      margin-right: 14px;
+      padding-bottom: 72px;
+    }
+  }
+
+  .pencil {
+    display: flex;
+    flex-shrink: 0;
+    align-self: flex-end;
+    cursor: pointer;
+  }
+  
 }
