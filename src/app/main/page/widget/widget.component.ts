@@ -29,12 +29,23 @@ export class WidgetComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    console.log(this.longTermGoal);
   }
 
   // --------------- DATA BINDING FUNCTIONS ----------------
 
 
   // --------------- EVENT BINDING FUNCTIONS ---------------
+
+  openEditor () {
+    console.log("Open editor");
+    document.getElementById('edit-popup').style.display = 'block';
+  }
+
+  closeEditor () {
+    console.log("Close editor");
+    document.getElementById('edit-popup').style.display = 'none';
+  }
 
 
   // --------------- OTHER -------------------------------

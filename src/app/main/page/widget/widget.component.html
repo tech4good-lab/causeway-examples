@@ -1,1 +1,46 @@
-<div class="widget">widget!</div>
+
+<div class="widget">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+    <div class="long-term-goals">
+        <h3>Long-term Goals</h3>
+        <div class="goals">
+            <div class="year" style="margin-bottom: 25px;">
+                <h4>1 year</h4>
+                <div class="goal-body">
+                    Secure SWE or UX Engineering Internship
+                </div>
+            </div>
+            <div class="year">
+                <h4>5 year</h4>
+                <div class="goal-body">
+                    SWE with UX/Design/Animation oriented work
+                </div>
+            </div>
+        </div>
+        <div class="edit-button">
+            <img src="..\assets\Vector.png" (click)="openEditor();" />
+        </div>
+    
+    </div>
+</div>
+
+<div id="edit-popup">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+    <div class="long-term-goals-editor">
+        <span class="close" (click)="closeEditor();">&times;</span>
+        <p class="heading">Long-term Goals</p>
+        <p class="subheading" style="font-weight: 300;">Plan your future</p>
+        <div class="goals-input">
+            <div class="year-input">
+                <p class="subheading" style="font-weight: bold;">1 year</p>
+                <input class="goal-input" placeholder="Secure SWE or UX Engineering Internship">
+                <hr>
+            </div>
+            <div class="year-input">
+                <p class="subheading" style="font-weight: bold;">5 year</p>
+                <input class="goal-input" placeholder="SWE with UX/Design/Animation oriented work">
+                <hr>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,5 +1,89 @@
 .widget {
-  // replace this with your code
-  border: black 1px solid;
+  border-radius: 10px;
   background-color: white;
+  width: 267px;
+  height: 310px;
+}
+
+.long-term-goals {
+  padding-right: 30px;
+  padding-left: 30px;
+  padding-top: 20px;
+  font-family: 'Montserrat';
+}
+
+h4, .heading, .subheading {
+  margin-block-end: 5px;
+  margin-block-start: 5px;
+}
+
+h3, h4, .subheading, .heading {
+  color: #EE8B72;
+}
+
+.year {
+  border-left: 2px solid #EE8B72;
+  padding-left: 10px;
+}
+
+.edit-button {
+  float: right;
+  padding-top: 10px;
+}
+
+#edit-popup {
+  display: none;
+  width: 484px;
+  height: 366px;
+  border-radius: 10px;
+  background-color: white;
+  position: absolute;
+  top: 25%;
+  right: 25%;
+}
+
+.long-term-goals-editor {
+  padding-right: 47px;
+  padding-left: 47px;
+  padding-top: 42px;
+  font-family: 'Montserrat';
+}
+
+.close {
+  font-size: 45px;
+  font-weight: 100;
+  float: right;
+}
+
+.heading {
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 29px;
+}
+
+.subheading {
+  font-size: 20px;
+  line-height: 24px;
+}
+
+.goals-input {
+  padding-top: 30px;
+}
+
+.year-input {
+  padding-bottom: 30px;
+}
+
+.goal-input {
+  padding-top: 5px;
+  border: none;
+  font-family: 'Montserrat';
+  font-size: 16px;
+  line-height: 20px;
+  width: 378px;
+}
+
+.goal-input:focus {
+  outline: none;
+  border: none;
 }
