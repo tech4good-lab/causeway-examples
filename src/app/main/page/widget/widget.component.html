@@ -1,15 +1,13 @@
 <div class="widget" *ngIf="longTermData">
-  Hello
-  <!--
+  <!-- Data doesn't show up. Need to retrieve and bind properly (TODO)-->
   <div class="title">Long-term Goals</div>
-    <div class="goals">
-      <div class="person" *ngFor="let myGoal of longTermData.longTermGoals">
-          <div class="year1">1 year</div>
-          <div class="one-year-goal">{{ myGoal.oneYear }}</div>
-          <div class="year5">5 years</div>
-          <div class="five-year-goal">{{ myGoal.fiveYear }}</div>
-      </div>
+  <div class="goals">
+    <div class="person" *ngFor="let myGoal of longTermData">
+      <div class="year1">1 year</div>
+      <div class="one-year-goal">{{ myGoal.oneYear }}</div>
+      <div class="year5">5 years</div>
+      <div class="five-year-goal">{{ myGoal.fiveYear }}</div>
+    </div>
   </div>
-  <button class="pencil" (click)="edit()">Pencil</button>
-  -->
+  <button class="pencil" (click)="edit()">Edit</button> <!-- Supposed to be the pencil-->
 </div>
