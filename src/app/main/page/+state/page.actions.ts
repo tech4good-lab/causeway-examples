@@ -13,6 +13,10 @@ export class LoadData implements Action {
   constructor(
     public payload: {
       containerId: string;
+      //quarterStartTime: number,
+      //oneYear: string,
+      //fiveYear: string,
+      currentUser: User,
     }
   ) {}
 }

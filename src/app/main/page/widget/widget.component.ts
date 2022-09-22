@@ -14,7 +14,8 @@ export class WidgetComponent implements OnInit {
   // --------------- INPUTS AND OUTPUTS ---------
 
   /** The long term goal for this given time. */
-  @Input() longTermData: LongTermData;
+  @Input() longTermData: LongTermData[];
+  //@Input() longTermData: LongTermData;
  
   /** Initiate edit of long term goals. */
   @Output() editGoals: EventEmitter<void> = new EventEmitter<void>();
