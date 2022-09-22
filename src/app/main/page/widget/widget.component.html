@@ -1,1 +1,12 @@
-<div class="widget">widget!</div>
+<div class="widget">
+  <div class="title">Long-term Goals</div>
+    <div class="goals">
+      <div class="person" *ngFor="let myGoal of longTermData.longTermGoals">
+          <div class="year1">1 year</div>
+          <div class="one-year-goal">{{ myGoal.oneYear }}</div>
+          <div class="year5">5 years</div>
+          <div class="five-year-goal">{{ myGoal.fiveYear }}</div>
+      </div>
+  </div>
+  <button class="pencil" (click)="edit()">Pencil</button>
+</div>

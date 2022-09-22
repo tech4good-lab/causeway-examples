@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { WidgetAnimations } from './widget.animations';
+import { LongTermData } from '../+state/page.model';
 
 @Component({
   selector: 'app-widget',
@@ -12,6 +13,12 @@ export class WidgetComponent implements OnInit {
 
   // --------------- INPUTS AND OUTPUTS ---------
 
+  /** The long term goal for this given time. */
+  @Input() longTermData: LongTermData;
+ 
+  /** Initiate edit of long term goals. */
+  @Output() editGoals: EventEmitter<void> = new EventEmitter<void>();
+
   // --------------- LOCAL UI STATE ----------------------
 
   constructor() { }
@@ -23,6 +30,11 @@ export class WidgetComponent implements OnInit {
 
 
   // --------------- EVENT BINDING FUNCTIONS ---------------
+  
+  /** Function for emitting an edit goals event */
+  edit() {
+    this.editGoals.emit()
+  }
 
 
   // --------------- OTHER -------------------------------
