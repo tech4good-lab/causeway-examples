@@ -13,8 +13,10 @@ import { LoadData, Cleanup } from './+state/page.actions';
 import { RouterNavigate } from '../../core/store/app.actions';
 import { UpdateUser } from '../../core/store/user/user.actions';
 import { LongTermGoal } from 'src/app/core/store/long-term-goal/long-term-goal.model'; // ADDED
-import { LongTermData } from './+state/page.model'; // ADDED
+import { LongTermData, LongTermGoalInForm } from './+state/page.model'; // ADDED
 //import { LongTermGoalService } from '/../../core/store/long-term-goal/long-term-goal.service';  // ADDED
+import { MatDialog } from '@angular/material/dialog';
+import { ModalComponent } from './modal/modal.component';
 
 @Component({
   selector: 'app-page',
@@ -47,6 +49,8 @@ export class PageComponent implements OnInit {
   // --------------- DATA BINDING STREAMS ----------------
 
   // --------------- EVENT BINDING STREAMS ---------------
+  /** Event for opening the edit modal. */
+  openEditModal$: Subject<void> = new Subject();
 
   // --------------- OTHER -------------------------------
 
@@ -57,9 +61,32 @@ export class PageComponent implements OnInit {
     private route: ActivatedRoute,
     private selectors: PageSelectors,
     private store: Store<fromStore.State>,
-    private db: FirebaseService
+    private db: FirebaseService,
+    private dialog: MatDialog,
   ) {
     // --------------- EVENT HANDLING ----------------------
+    /** Handle openEditModal events. */
+    this.openEditModal$.pipe(
+      //withLatestFrom(this.quarterData$),
+      withLatestFrom(this.longTermGoals$),
+      takeUntil(this.unsubscribe$),
+    ).subscribe(([_, longTermGoals]) => {
+
+      const dialogRef = this.dialog.open(ModalComponent, {
+        height: '366px',
+        width: '100%',
+        maxWidth: '500px',
+        data: {
+          longTermGoals,
+          updateGoals: (
+            goals: [LongTermGoalInForm, LongTermGoalInForm, LongTermGoalInForm],
+            loading$: BehaviorSubject<boolean>,
+          ) => {
+            console.log(goals);
+          }
+        },
+      });
+    });
   }
 
   ngOnInit() { 

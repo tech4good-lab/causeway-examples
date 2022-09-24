@@ -1,5 +1,8 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter, Inject } from '@angular/core';
 import { ModalAnimations } from './modal.animations';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { LongTermData, LongTermGoalInForm } from '../+state/page.model';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-modal',
@@ -15,7 +18,17 @@ export class ModalComponent implements OnInit {
   // --------------- LOCAL UI STATE ----------------------
 
 
-  constructor() { }
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: {
+      longTermData: LongTermData,
+      updateGoals: (
+        //goals: [LongTermGoalInForm, LongTermGoalInForm,LongTermGoalInForm],
+        goals: [LongTermGoalInForm, LongTermGoalInForm],
+        loading$: BehaviorSubject<boolean>,
+      ) => void,
+    },
+    private dialogRef: MatDialogRef<ModalComponent>,
+  ) { }
 
   ngOnInit(): void {
   }
