@@ -1,7 +1,106 @@
-:host {
-  display: block;
-  .modal {
-    // REMOVE WHEN FINISHING LAYOUT STYLES
-    border: 1px solid black;
+@import url('//fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap');
+
+* {
+  font-family: Montserrat;
+}
+
+.modal {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 0 4px;
+  align-items: center;
+  justify-content: center;
+
+  .header {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding-left: 19px;
+    width: 100%;
+
+    .text-header {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      margin-bottom: 14px;
+
+      .title {
+        padding-top: 18px;
+        font-weight: 600;
+        font-size: 24px;
+        color: #2dbdb1;
+        margin-bottom: 8px;
+      }
+
+      .subtitle {
+        font-weight: 300;
+        font-size: 20px;
+        color: #2dbdb1;
+      }
+    }
+
+    .close {
+      margin-top: 4px;
+      flex-shrink: 0;
+      display: block;
+      cursor: pointer;
+    }
+  }
+
+  .tasks-form {
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    width: 100%;
+    flex-shrink: 0;
+    height: 220px;
+    padding-left: 19px;
+
+    .task {
+      display: flex;
+      flex-direction: row;
+      font-weight: 300;
+      font-size: 15px;
+      color: #4B5853;
+      width: 100%;
+      margin-bottom: -11px;
+
+      .drag-handle {
+        margin: 17px 7px 0 -4px;
+      }
+
+      .task-field {
+        flex-grow: 1;
+      }
+    }
+    
+    button.save {
+      margin-top: 30px;
+      padding: 5px;
+      color: white;
+      align-self: flex-end;
+      width: 84px;
+      height: 34px;
+      font-size: 18px;
+      background-color: #2DBDB1;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+
+      &:disabled {
+        color: #AAA;
+        background-color: #EEE;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  .loading-label {
+    margin-top: 30px;
+    font-weight: bold;
+    font-size: 18px;
+    color: #2dbdb1;
   }
 }

@@ -13,7 +13,7 @@ import { LoadData, Cleanup } from './+state/page.actions';
 import { RouterNavigate } from '../../core/store/app.actions';
 import { UpdateUser } from '../../core/store/user/user.actions';
 import { LongTermGoal } from 'src/app/core/store/long-term-goal/long-term-goal.model'; // ADDED
-import { LongTermData, LongTermGoalInForm } from './+state/page.model'; // ADDED
+import { LongTermData, LongTermGoalsInForm } from './+state/page.model'; // ADDED
 //import { LongTermGoalService } from '/../../core/store/long-term-goal/long-term-goal.service';  // ADDED
 import { MatDialog } from '@angular/material/dialog';
 import { ModalComponent } from './modal/modal.component';
@@ -77,12 +77,14 @@ export class PageComponent implements OnInit {
         width: '100%',
         maxWidth: '500px',
         data: {
-          longTermGoals,
+          // longTermData
+          longTermGoals,  // Or use above?
           updateGoals: (
-            goals: [LongTermGoalInForm, LongTermGoalInForm, LongTermGoalInForm],
+            goals: [LongTermGoalsInForm, LongTermGoalsInForm],
             loading$: BehaviorSubject<boolean>,
           ) => {
             console.log(goals);
+            dialogRef.close();
           }
         },
       });

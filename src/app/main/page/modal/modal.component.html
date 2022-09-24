@@ -1,3 +1,18 @@
 <div class="modal">
-  modal works!
+  <div class="header">
+    <div class="text-header">
+      <div class="title">Long-term Goals</div>
+      <div class="subtitle">Plan your future</div>
+    </div>
+    <img class="close" src="/assets/img/close.svg" width="30" height="30" (click)="close()" />
+  </div>
+  <form cdkDropList (cdkDropListDropped)="drop($event)" class="tasks-form" #projectForm="ngForm" (ngSubmit)="submit()">
+    <div class="task" cdkDrag *ngFor="let goal of longTermGoalsForm">
+      <img class="drag-handle" src="/assets/img/drag.svg" height="20" />
+      <mat-form-field class="task-field">
+        <input matInput [(ngModel)]="goal.text" name="text-{{goal.__id}}" required>
+      </mat-form-field>
+    </div>
+    <button class="save" type="submit" [disabled]="!projectForm.form.valid">Save</button>
+  </form>
 </div>

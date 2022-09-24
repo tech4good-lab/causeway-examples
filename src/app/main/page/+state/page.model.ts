@@ -4,7 +4,7 @@ export interface LongTermData extends LongTermGoal {
   longTermGoals: LongTermGoal[]
 }
 
-export interface LongTermGoalInForm {
+export interface LongTermGoalsInForm {
     __id: string;
     text: string;
   }
