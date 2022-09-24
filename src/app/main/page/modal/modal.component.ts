@@ -46,9 +46,13 @@ export class ModalComponent implements OnInit {
         //text: this.data.quarterData.quarterGoals[0].text,
         __id: this.data.longTermGoals[0].__id,
         text: this.data.longTermGoals[0].oneYear,
+        //oneYear: this.data.longTermGoals[0].oneYear,
+        //fiveYear: this.data.longTermGoals[0].fiveYear,
       },
       { 
         __id: this.data.longTermGoals[0].__id,
+        //oneYear: this.data.longTermGoals[0].oneYear,
+        //fiveYear: this.data.longTermGoals[0].fiveYear,
         text: this.data.longTermGoals[0].fiveYear,
       },
     ];

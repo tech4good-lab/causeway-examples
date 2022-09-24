@@ -10,13 +10,15 @@ import { Observable, Subject, BehaviorSubject, combineLatest } from 'rxjs';
 import { User } from '../../core/store/user/user.model';
 import { PageSelectors } from './+state/page.selectors';
 import { LoadData, Cleanup } from './+state/page.actions';
-import { RouterNavigate } from '../../core/store/app.actions';
+import { ActionFlow, RouterNavigate } from '../../core/store/app.actions';  // ADDED
 import { UpdateUser } from '../../core/store/user/user.actions';
 import { LongTermGoal } from 'src/app/core/store/long-term-goal/long-term-goal.model'; // ADDED
 import { LongTermData, LongTermGoalsInForm } from './+state/page.model'; // ADDED
 //import { LongTermGoalService } from '/../../core/store/long-term-goal/long-term-goal.service';  // ADDED
-import { MatDialog } from '@angular/material/dialog';
-import { ModalComponent } from './modal/modal.component';
+import { LongTermGoalActionTypes, UpdateLongTermGoal } from '../../core/store/long-term-goal/long-term-goal.actions'; // ADDED
+import { MatDialog, MatDialogRef } from '@angular/material/dialog'; // ADDED
+import { ModalComponent } from './modal/modal.component'; // ADDED
+import { ShowSnackbar } from '../../core/snackbar/snackbar.actions'; // ADDED
 
 @Component({
   selector: 'app-page',
@@ -83,9 +85,47 @@ export class PageComponent implements OnInit {
             goals: [LongTermGoalsInForm, LongTermGoalsInForm],
             loading$: BehaviorSubject<boolean>,
           ) => {
-            console.log(goals);
-            dialogRef.close();
-          }
+            const actionSets = goals.map((g) => {
+              return {
+                action: new UpdateLongTermGoal(g.text, { // DOUBLE CHECK
+                  //text: g.text,
+                  //order: i + 1,
+                  oneYear: g.text,
+                }, this.containerId),
+                responseActionTypes: {
+                  success: LongTermGoalActionTypes.UPDATE_SUCCESS,
+                  failure: LongTermGoalActionTypes.UPDATE_FAIL,
+                },
+              };
+            });
+
+            this.store.dispatch(
+              new ActionFlow({
+                actionSets,
+                loading$,
+                successActionFn: (actionSetResponses) => {
+                  loading$.next(false);
+                  dialogRef.close();
+                  return [
+                    new ShowSnackbar({
+                      message: 'Updated long term goals',
+                      config: { duration: 3000 },
+                    })
+                  ];
+                },
+                failActionFn: (actionSetResponses) => {
+                  loading$.next(false);
+                  dialogRef.close();
+                  return [
+                    new ShowSnackbar({
+                      message: 'Failed to update long term goals',
+                      config: { duration: 3000 },
+                    }),
+                  ];
+                },
+              })
+            );
+          },
         },
       });
     });
