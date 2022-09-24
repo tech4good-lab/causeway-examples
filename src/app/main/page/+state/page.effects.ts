@@ -22,7 +22,7 @@ export class PageEffects {
       ofType<LoadData>(PageActionTypes.LOAD_DATA),
       mergeMap((action: LoadData) => {
         const loadId = action.payload.containerId;
-        const longTermGoal = action.payload.longTermGoal; // ADDED  Note: Not getting used
+        //const longTermGoals = action.payload.longTermGoals; // ADDED  Note: Not getting used
         const currentUser = action.payload.currentUser; // ADDED
 
         //return [];

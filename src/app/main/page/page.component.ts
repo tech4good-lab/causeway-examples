@@ -39,7 +39,7 @@ export class PageComponent implements OnInit {
   containerId: string = this.db.createId();
 
   /** Get the long term goal data. */  // ADDED
-  longTermGoal$: Observable<LongTermGoal> = this.selectors.selectLongTermGoal(
+  longTermGoals$: Observable<LongTermGoal[]> = this.selectors.selectLongTermGoals(
     this.currentUser$,
     this.containerId,
   );
@@ -65,12 +65,12 @@ export class PageComponent implements OnInit {
   ngOnInit() { 
     // --------------- LOAD DATA ---------------------------
     // Once everything is set up, load the data for the role.
-    combineLatest(this.longTermGoal$, this.currentUser$).pipe(
+    combineLatest(this.longTermGoals$, this.currentUser$).pipe(
       takeUntil(this.unsubscribe$),
-    ).subscribe(([longTermGoal, currentUser]) => {
+    ).subscribe(([longTermGoals, currentUser]) => {
       this.store.dispatch(
         new LoadData({
-          longTermGoal,
+          longTermGoals,
           currentUser,
           containerId: this.containerId,
         })

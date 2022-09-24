@@ -19,7 +19,8 @@ export class PageSelectors {
 
   /** Select the quarter data. */
   //selectQuarterData(longTermGoal$: Observable<LongTermGoal>, currentUser$: Observable<User>, cId: string): Observable<LongTermGoal> {
-  selectLongTermGoal(currentUser$: Observable<User>, cId: string): Observable<LongTermGoal> {
+  //selectLongTermGoal(currentUser$: Observable<User>, cId: string): Observable<LongTermGoal[]> {
+  selectLongTermGoals(currentUser$: Observable<User>, cId: string): Observable<LongTermGoal[]> {
     /*
     return combineLatest(longTermGoal$, currentUser$).pipe(
       switchMap(([longTermGoal, currentUser]) => {
@@ -30,7 +31,8 @@ export class PageSelectors {
 
     return currentUser$.pipe(
       switchMap((currentUser) => {
-        return this.slRx.selectLongTermGoal<LongTermGoal>(currentUser.__id, cId);
+        // return this.slRx.selectLongTermGoal<LongTermGoal>(currentUser.__id, cId);
+        return this.slRx.selectLongTermGoals<LongTermGoal>([['__id', '==', currentUser.__id]], cId);
       }),
     );
 

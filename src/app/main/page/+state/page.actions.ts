@@ -15,7 +15,7 @@ export class LoadData implements Action {
 
   constructor(
     public payload: {
-      longTermGoal: LongTermGoal, // ADDED
+      longTermGoals: LongTermGoal[], // ADDED
       currentUser: User,  // ADDED
       containerId: string;
     }
