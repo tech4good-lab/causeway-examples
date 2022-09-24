@@ -12,6 +12,7 @@ import { ActionFlow, RouterNavigate, LoadAction, Unsubscribe } from '../../../co
 import { PageActionTypes, Cleanup, LoadData } from './page.actions';
 
 import { StreamUser } from '../../../core/store/user/user.actions';
+import { StreamLongTermGoal } from '../../../core/store/long-term-goal/long-term-goal.actions'; // ADDED
 
 @Injectable()
 export class PageEffects {
@@ -21,7 +22,11 @@ export class PageEffects {
       ofType<LoadData>(PageActionTypes.LOAD_DATA),
       mergeMap((action: LoadData) => {
         const loadId = action.payload.containerId;
-        return [];
+        const longTermGoal = action.payload.longTermGoal; // ADDED  Note: Not getting used
+        const currentUser = action.payload.currentUser; // ADDED
+
+        //return [];
+        return [new StreamLongTermGoal([['__id', '==', currentUser.__id]], {}, loadId)]; // ADDED
       })
     )
   );

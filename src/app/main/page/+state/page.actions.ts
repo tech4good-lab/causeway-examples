@@ -1,4 +1,7 @@
 import { Action } from '@ngrx/store';
+import { LongTermGoal } from 'src/app/core/store/long-term-goal/long-term-goal.model'; // ADDED
+import { LongTermData } from './page.model'; // ADDED
+//import { LongTermGoal } from './page.model';  // ADDED  Note: Use above instead
 import { User } from '../../../core/store/user/user.model';
 
 export enum PageActionTypes {
@@ -12,6 +15,8 @@ export class LoadData implements Action {
 
   constructor(
     public payload: {
+      longTermGoal: LongTermGoal, // ADDED
+      currentUser: User,  // ADDED
       containerId: string;
     }
   ) {}

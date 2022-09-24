@@ -12,6 +12,9 @@ import { PageSelectors } from './+state/page.selectors';
 import { LoadData, Cleanup } from './+state/page.actions';
 import { RouterNavigate } from '../../core/store/app.actions';
 import { UpdateUser } from '../../core/store/user/user.actions';
+import { LongTermGoal } from 'src/app/core/store/long-term-goal/long-term-goal.model'; // ADDED
+import { LongTermData } from './+state/page.model'; // ADDED
+//import { LongTermGoalService } from '/../../core/store/long-term-goal/long-term-goal.service';  // ADDED
 
 @Component({
   selector: 'app-page',
@@ -23,6 +26,10 @@ import { UpdateUser } from '../../core/store/user/user.actions';
 export class PageComponent implements OnInit {
 
   // --------------- ROUTE PARAMS & CURRENT USER ---------
+  /** The currently signed in user. */  // ADDED
+  currentUser$: Observable<User> = this.store.pipe(
+    select(fromAuth.selectUser),
+  );
 
   // --------------- LOCAL UI STATE ----------------------
 
@@ -30,6 +37,12 @@ export class PageComponent implements OnInit {
 
   /** Container id for selectors and loading. */
   containerId: string = this.db.createId();
+
+  /** Get the long term goal data. */  // ADDED
+  longTermGoal$: Observable<LongTermGoal> = this.selectors.selectLongTermGoal(
+    this.currentUser$,
+    this.containerId,
+  );
 
   // --------------- DATA BINDING STREAMS ----------------
 
@@ -52,6 +65,17 @@ export class PageComponent implements OnInit {
   ngOnInit() { 
     // --------------- LOAD DATA ---------------------------
     // Once everything is set up, load the data for the role.
+    combineLatest(this.longTermGoal$, this.currentUser$).pipe(
+      takeUntil(this.unsubscribe$),
+    ).subscribe(([longTermGoal, currentUser]) => {
+      this.store.dispatch(
+        new LoadData({
+          longTermGoal,
+          currentUser,
+          containerId: this.containerId,
+        })
+      );
+    });
   }
 
   ngOnDestroy() {
