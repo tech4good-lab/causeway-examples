@@ -41,13 +41,13 @@ export class ModalComponent implements OnInit {
   ngOnInit(): void {
     this.longTermGoalsForm = [
       { 
-        __id: this.data.longTermData.longTermGoals[0].__id,
-        year: 'one',
+        //__id: this.data.longTermData.longTermGoals[0].__id,
+        __id: 'one-year',
         text: this.data.longTermData.longTermGoals[0].oneYear,
       },
       { 
-        __id: this.data.longTermData.longTermGoals[0].__id,
-        year: 'five',
+        //__id: this.data.longTermData.longTermGoals[0].__id,
+        __id: 'five-year',
         text: this.data.longTermData.longTermGoals[0].fiveYear,
       },
     ];
