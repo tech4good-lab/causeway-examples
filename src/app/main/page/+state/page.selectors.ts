@@ -41,10 +41,22 @@ export class PageSelectors {
 
     return combineLatest(currentUser$).pipe(
       switchMap(([currentUser]) => {
-        return this.slRx.selectLongTermGoal<LongTermData>(`${currentUser.__id}`, cId, (q) => ({
+        //return this.slRx.selectLongTermGoal<LongTermData>(`${currentUser.__id}`, cId, (q) => ({
+        return this.slRx.selectLongTermGoal<LongTermData>(currentUser.__id, cId, (q) => ({
+          /*
           longTermGoals: this.slRx.selectLongTermGoals([
-            ['__id', '==', q.__id],
+            //['__id', '==', q.__id],
+            ['__id', '==', currentUser.__id],
           ], cId)
+          */
+          
+          longTermGoals: this.slRx.selectLongTermGoals([
+            ['__id', '==', currentUser.__id],
+          ], cId).pipe(
+            map(goals => {
+              return goals;
+            }),
+          ),      
         }));
       }),
     );

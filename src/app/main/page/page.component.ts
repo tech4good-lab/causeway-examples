@@ -82,11 +82,19 @@ export class PageComponent implements OnInit {
             goals: [LongTermGoalInForm, LongTermGoalInForm, LongTermGoalInForm],
             loading$: BehaviorSubject<boolean>,
           ) => {
-            const actionSets = goals.map((g, i) => {
+            // const actionSets = goals.map((g, i) => {
+            const actionSets = goals.map((g) => {
               return {
                 action: new UpdateLongTermGoal(g.__id, { 
-                  text: g.text,
-                  order: i + 1,
+                  //oneYear: g.year === 'one' ? g.text : longTermData.longTermGoals[0].oneYear,
+                  //fiveYear: g.year === 'five' ? g.text : longTermData.longTermGoals[0].fiveYear,
+
+                  // Does above one work?
+                  oneYear: g.text,
+                  fiveYear: g.text, 
+                  
+                  //text: g.text,
+                  //order: i + 1,
                 }, this.containerId),
                 responseActionTypes: {
                   success: LongTermGoalActionTypes.UPDATE_SUCCESS,
