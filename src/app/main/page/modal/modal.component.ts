@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter, Inject } from '@angular/core';
 import { ModalAnimations } from './modal.animations';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { LongTermData, LongTermGoalsInForm } from '../+state/page.model';
+import { LongTermData, LongTermGoalInForm } from '../+state/page.model';
 import { BehaviorSubject } from 'rxjs';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { LongTermGoal } from 'src/app/core/store/long-term-goal/long-term-goal.model';
@@ -23,16 +23,15 @@ export class ModalComponent implements OnInit {
   loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   /** Local state for form info. */
-  longTermGoalsForm: [LongTermGoalsInForm, LongTermGoalsInForm];
+  longTermGoalsForm: [LongTermGoalInForm, LongTermGoalInForm];
 
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: {
-       //longTermData: LongTermData,
-      longTermGoals: LongTermGoal[],  // Or use top one
+      longTermData: LongTermData,
       updateGoals: (
         //goals: [LongTermGoalInForm, LongTermGoalInForm,LongTermGoalInForm],
-        goals: [LongTermGoalsInForm, LongTermGoalsInForm],
+        goals: [LongTermGoalInForm, LongTermGoalInForm],
         loading$: BehaviorSubject<boolean>,
       ) => void,
     },
@@ -42,18 +41,14 @@ export class ModalComponent implements OnInit {
   ngOnInit(): void {
     this.longTermGoalsForm = [
       { 
-        //__id: this.data.quarterData.quarterGoals[0].__id,
-        //text: this.data.quarterData.quarterGoals[0].text,
-        __id: this.data.longTermGoals[0].__id,
-        text: this.data.longTermGoals[0].oneYear,
-        //oneYear: this.data.longTermGoals[0].oneYear,
-        //fiveYear: this.data.longTermGoals[0].fiveYear,
+        //__id: this.data.longTermData.longTermGoals[0].__id,
+        __id: 'one-year',
+        text: this.data.longTermData.longTermGoals[0].oneYear,
       },
       { 
-        __id: this.data.longTermGoals[0].__id,
-        //oneYear: this.data.longTermGoals[0].oneYear,
-        //fiveYear: this.data.longTermGoals[0].fiveYear,
-        text: this.data.longTermGoals[0].fiveYear,
+        //__id: this.data.longTermData.longTermGoals[0].__id,
+        __id: 'five-year',
+        text: this.data.longTermData.longTermGoals[0].fiveYear,
       },
     ];
   }
@@ -62,6 +57,7 @@ export class ModalComponent implements OnInit {
 
 
   // --------------- EVENT BINDING FUNCTIONS ---------------
+
   /** Drop event for drag-and-drop functionality */
   drop(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.longTermGoalsForm, event.previousIndex, event.currentIndex);

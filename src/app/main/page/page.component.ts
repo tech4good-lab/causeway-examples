@@ -13,8 +13,7 @@ import { LoadData, Cleanup } from './+state/page.actions';
 import { ActionFlow, RouterNavigate } from '../../core/store/app.actions';  // ADDED
 import { UpdateUser } from '../../core/store/user/user.actions';
 import { LongTermGoal } from 'src/app/core/store/long-term-goal/long-term-goal.model'; // ADDED
-import { LongTermData, LongTermGoalsInForm } from './+state/page.model'; // ADDED
-//import { LongTermGoalService } from '/../../core/store/long-term-goal/long-term-goal.service';  // ADDED
+import { LongTermData, LongTermGoalInForm } from './+state/page.model'; // ADDED
 import { LongTermGoalActionTypes, UpdateLongTermGoal } from '../../core/store/long-term-goal/long-term-goal.actions'; // ADDED
 import { MatDialog, MatDialogRef } from '@angular/material/dialog'; // ADDED
 import { ModalComponent } from './modal/modal.component'; // ADDED
@@ -43,7 +42,7 @@ export class PageComponent implements OnInit {
   containerId: string = this.db.createId();
 
   /** Get the long term goal data. */  // ADDED
-  longTermGoals$: Observable<LongTermGoal[]> = this.selectors.selectLongTermGoals(
+  longTermData$: Observable<LongTermData> = this.selectors.selectLongTermData(
     this.currentUser$,
     this.containerId,
   );
@@ -67,30 +66,27 @@ export class PageComponent implements OnInit {
     private dialog: MatDialog,
   ) {
     // --------------- EVENT HANDLING ----------------------
-    /** Handle openEditModal events. */
     this.openEditModal$.pipe(
-      //withLatestFrom(this.quarterData$),
-      withLatestFrom(this.longTermGoals$),
+      withLatestFrom(this.longTermData$),
       takeUntil(this.unsubscribe$),
-    ).subscribe(([_, longTermGoals]) => {
+    ).subscribe(([_, longTermData]) => {
 
       const dialogRef = this.dialog.open(ModalComponent, {
         height: '366px',
         width: '100%',
         maxWidth: '500px',
+        panelClass: 'dialog-container',
         data: {
-          // longTermData
-          longTermGoals,  // Or use above?
+          longTermData,
           updateGoals: (
-            goals: [LongTermGoalsInForm, LongTermGoalsInForm],
+            goals: [LongTermGoalInForm, LongTermGoalInForm, LongTermGoalInForm],
             loading$: BehaviorSubject<boolean>,
           ) => {
-            const actionSets = goals.map((g) => {
+            const actionSets = goals.map((g, i) => {
               return {
-                action: new UpdateLongTermGoal(g.text, { // DOUBLE CHECK
-                  //text: g.text,
-                  //order: i + 1,
-                  oneYear: g.text,
+                action: new UpdateLongTermGoal(g.__id, { 
+                  text: g.text,
+                  order: i + 1,
                 }, this.containerId),
                 responseActionTypes: {
                   success: LongTermGoalActionTypes.UPDATE_SUCCESS,
@@ -108,7 +104,7 @@ export class PageComponent implements OnInit {
                   dialogRef.close();
                   return [
                     new ShowSnackbar({
-                      message: 'Updated long term goals',
+                      message: 'Updated quarter goals',
                       config: { duration: 3000 },
                     })
                   ];
@@ -118,7 +114,7 @@ export class PageComponent implements OnInit {
                   dialogRef.close();
                   return [
                     new ShowSnackbar({
-                      message: 'Failed to update long term goals',
+                      message: 'Failed to update quarter goals',
                       config: { duration: 3000 },
                     }),
                   ];
@@ -134,12 +130,11 @@ export class PageComponent implements OnInit {
   ngOnInit() { 
     // --------------- LOAD DATA ---------------------------
     // Once everything is set up, load the data for the role.
-    combineLatest(this.longTermGoals$, this.currentUser$).pipe(
+    combineLatest(this.longTermData$, this.currentUser$).pipe(
       takeUntil(this.unsubscribe$),
-    ).subscribe(([longTermGoals, currentUser]) => {
+    ).subscribe(([longTermData, currentUser]) => {
       this.store.dispatch(
         new LoadData({
-          longTermGoals,
           currentUser,
           containerId: this.containerId,
         })
