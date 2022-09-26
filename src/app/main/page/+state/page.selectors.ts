@@ -18,10 +18,9 @@ export class PageSelectors {
 
 
   /** Select the quarter data. */
-  //selectQuarterData(longTermGoal$: Observable<LongTermGoal>, currentUser$: Observable<User>, cId: string): Observable<LongTermGoal> {
-  //selectLongTermGoal(currentUser$: Observable<User>, cId: string): Observable<LongTermGoal[]> {
   //selectLongTermGoals(currentUser$: Observable<User>, cId: string): Observable<LongTermGoal[]> {
-  selectLongTermData(currentUser$: Observable<User>, cId: string): Observable<LongTermData> {
+  selectLongTermData(currentUser$: Observable<User>, cId: string): Observable<LongTermData[]> {
+  //selectLongTermData(currentUser$: Observable<User>, cId: string): Observable<LongTermData> {
     /*
     return combineLatest(longTermGoal$, currentUser$).pipe(
       switchMap(([longTermGoal, currentUser]) => {
@@ -41,8 +40,9 @@ export class PageSelectors {
 
     return combineLatest(currentUser$).pipe(
       switchMap(([currentUser]) => {
+        return this.slRx.selectLongTermGoals<LongTermData>([['__id', '==', currentUser.__id]], cId);
         //return this.slRx.selectLongTermGoal<LongTermData>(`${currentUser.__id}`, cId, (q) => ({
-        return this.slRx.selectLongTermGoal<LongTermData>(currentUser.__id, cId, (q) => ({
+        //return this.slRx.selectLongTermGoal<LongTermData>(currentUser.__id, cId, (q) => ({
           /*
           longTermGoals: this.slRx.selectLongTermGoals([
             //['__id', '==', q.__id],
@@ -50,14 +50,16 @@ export class PageSelectors {
           ], cId)
           */
           
+          /*
           longTermGoals: this.slRx.selectLongTermGoals([
             ['__id', '==', currentUser.__id],
           ], cId).pipe(
             map(goals => {
               return goals;
             }),
-          ),      
-        }));
+          ),  
+          */    
+        //}));
       }),
     );
   }

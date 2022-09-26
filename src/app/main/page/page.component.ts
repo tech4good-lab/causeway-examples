@@ -42,7 +42,8 @@ export class PageComponent implements OnInit {
   containerId: string = this.db.createId();
 
   /** Get the long term goal data. */  // ADDED
-  longTermData$: Observable<LongTermData> = this.selectors.selectLongTermData(
+  longTermData$: Observable<LongTermData[]> = this.selectors.selectLongTermData(
+  //longTermData$: Observable<LongTermData> = this.selectors.selectLongTermData(
     this.currentUser$,
     this.containerId,
   );
@@ -88,10 +89,12 @@ export class PageComponent implements OnInit {
                 action: new UpdateLongTermGoal(g.__id, { 
                   //oneYear: g.year === 'one' ? g.text : longTermData.longTermGoals[0].oneYear,
                   //fiveYear: g.year === 'five' ? g.text : longTermData.longTermGoals[0].fiveYear,
+                  oneYear: g.year === 'one' ? g.text : longTermData[0].oneYear,
+                  fiveYear: g.year === 'five' ? g.text : longTermData[0].fiveYear,
 
                   // Does above one work?
-                  oneYear: g.text,
-                  fiveYear: g.text, 
+                  //oneYear: g.text,
+                  //fiveYear: g.text, 
                   
                   //text: g.text,
                   //order: i + 1,

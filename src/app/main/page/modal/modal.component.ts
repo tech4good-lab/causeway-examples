@@ -30,7 +30,6 @@ export class ModalComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: {
       longTermData: LongTermData,
       updateGoals: (
-        //goals: [LongTermGoalInForm, LongTermGoalInForm,LongTermGoalInForm],
         goals: [LongTermGoalInForm, LongTermGoalInForm],
         loading$: BehaviorSubject<boolean>,
       ) => void,
