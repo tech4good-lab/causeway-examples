@@ -80,7 +80,7 @@ export class PageComponent implements OnInit {
         data: {
           longTermData,
           updateGoals: (
-            goals: [LongTermGoalInForm, LongTermGoalInForm, LongTermGoalInForm],
+            goals: [LongTermGoalInForm, LongTermGoalInForm],
             loading$: BehaviorSubject<boolean>,
           ) => {
             // const actionSets = goals.map((g, i) => {
