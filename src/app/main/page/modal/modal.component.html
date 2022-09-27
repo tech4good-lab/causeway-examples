@@ -16,7 +16,9 @@
         </mat-form-field>
       </div>
       -->
-      <!-- Forms show when this is used, data won't update though. So the *ngFor isn't working then? -->
+
+      <!-- Forms show when below is used, data won't update though. So the *ngFor isn't working then? -->
+      
       <div class="task" cdkDrag>
         <img class="drag-handle" src="/assets/img/drag.svg" height="20" />
         <mat-form-field class="task-field">
@@ -27,6 +29,7 @@
           <input matInput [(ngModel)]="longTermGoalsForm[1].text" name="text-{{longTermGoalsForm[1].__id}}" required>
         </mat-form-field>
       </div>
+      
       <button class="save" type="submit" [disabled]="!projectForm.form.valid">Save</button>
     </form>
   </ng-container>

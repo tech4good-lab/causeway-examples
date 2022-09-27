@@ -19,6 +19,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog'; // ADDED
 import { ModalComponent } from './modal/modal.component'; // ADDED
 import { ShowSnackbar } from '../../core/snackbar/snackbar.actions'; // ADDED
 
+
 @Component({
   selector: 'app-page',
   templateUrl: './page.component.html',
@@ -115,7 +116,7 @@ export class PageComponent implements OnInit {
                   dialogRef.close();
                   return [
                     new ShowSnackbar({
-                      message: 'Updated quarter goals',
+                      message: 'Updated long term goals',
                       config: { duration: 3000 },
                     })
                   ];
@@ -125,7 +126,7 @@ export class PageComponent implements OnInit {
                   dialogRef.close();
                   return [
                     new ShowSnackbar({
-                      message: 'Failed to update quarter goals',
+                      message: 'Failed to update long term goals',
                       config: { duration: 3000 },
                     }),
                   ];
