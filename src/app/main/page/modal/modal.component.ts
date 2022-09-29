@@ -28,6 +28,8 @@ export class ModalComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: {
       longTermData: LongTermData,
+      //longTermData: LongTermGoal,
+      //longTermData: LongTermData[], // See withLatestFrom(this.longTermData$)    If using pipe(...) on that, just use type LongTermData instead
       updateGoals: (
         goals: [LongTermGoalInForm, LongTermGoalInForm],
         loading$: BehaviorSubject<boolean>,
@@ -40,13 +42,17 @@ export class ModalComponent implements OnInit {
     this.longTermGoalsForm = [
       { 
         __id: this.data.longTermData.__id,
+        //__id: this.data.longTermData[0].__id,  // See withLatestFrom(this.longTermData$)    If using pipe(...) on that, just use above instead
         year: 'one',
         text: this.data.longTermData.oneYear,
+        //text: this.data.longTermData[0].oneYear,
       },
       { 
         __id: this.data.longTermData.__id,
+        //__id: this.data.longTermData[0].__id,
         year: 'five',
         text: this.data.longTermData.fiveYear,
+        //text: this.data.longTermData[0].fiveYear,
       },
     ];
   }

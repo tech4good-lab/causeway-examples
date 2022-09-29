@@ -19,7 +19,6 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ModalComponent } from './modal/modal.component';
 import { ShowSnackbar } from '../../core/snackbar/snackbar.actions';
 
-
 @Component({
   selector: 'app-page',
   templateUrl: './page.component.html',
@@ -45,6 +44,7 @@ export class PageComponent implements OnInit {
   /** Get the long term goal data. */
   //longTermData$: Observable<LongTermGoal> = this.selectors.selectLongTermData(
   longTermData$: Observable<LongTermData> = this.selectors.selectLongTermData(
+  //longTermData$: Observable<LongTermData[]> = this.selectors.selectLongTermData(
     this.currentUser$,
     this.containerId,
   );
@@ -69,7 +69,14 @@ export class PageComponent implements OnInit {
   ) {
     // --------------- EVENT HANDLING ----------------------
     this.openEditModal$.pipe(
-      withLatestFrom(this.longTermData$),
+      withLatestFrom(this.longTermData$),  // I could pipe longTermData$ (if using type Observable<LongTermData[]>) ??? See below
+      /*
+      withLatestFrom(this.longTermData$.pipe(
+        map((longTermData) => {
+          return longTermData[0];
+        })
+      )),
+      */
       takeUntil(this.unsubscribe$),
     ).subscribe(([_, longTermData]) => {
 

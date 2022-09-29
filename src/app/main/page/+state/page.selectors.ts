@@ -17,10 +17,12 @@ export class PageSelectors {
   constructor(private slRx: EntitySelectorService) {}
 
 
-  /** Select the quarter data. */
-  selectLongTermData(currentUser$: Observable<User>, cId: string): Observable<LongTermData> {
+  /** Select the long term goal data. */
   //selectLongTermData(currentUser$: Observable<User>, cId: string): Observable<LongTermGoal> {
-    /* This doesn't work
+  //selectLongTermData(currentUser$: Observable<User>, cId: string): Observable<LongTermData[]> { 
+  selectLongTermData(currentUser$: Observable<User>, cId: string): Observable<LongTermData> {  // ORIGINAL
+
+    /* ORIGINAL (Doesn't work. See reasons below)
     return currentUser$.pipe(
       switchMap((currentUser) => {
         return this.slRx.selectLongTermGoal<LongTermData>(currentUser.__id, cId);
@@ -32,28 +34,57 @@ export class PageSelectors {
       switchMap((currentUser) => {
         console.log('currentUser.__id', currentUser.__id);
 
+        // # 1
         /*
         let toReturn = this.slRx.selectLongTermGoals<LongTermData>([['__id', '==', currentUser.__id]], cId).pipe(
           map((longTermDataArr) => {
+            console.log('Hello World!');
+
+            // Shows up as an empty array.
+            // So nothing is getting selected. Do we have to input first?
+            console.log('The toReturn:', longTermDataArr);
+
+            console.log('The toReturn:', longTermDataArr[0]); // Shows up as undefined (Since longTermDataArr is an empty array)
             return longTermDataArr[0];
           })
         );
-
-        if(toReturn) {
-          console.log('toReturn is NOT null');
-          console.log('toReturn: ', toReturn);
-        } else {
-          console.log('toReturn is null');
-        }
         */
 
-        //let toReturn = this.slRx.selectLongTermGoal(currentUser.__id, cId);
-        let toReturn = this.slRx.selectLongTermGoal<LongTermData>(currentUser.__id, cId);
+        // # 2    Same as 1, but just getting a LongTermGoal Observable instead of LongTermData
+        /*
+        let toReturn = this.slRx.selectLongTermGoals([['__id', '==', currentUser.__id]], cId).pipe(
+          map((longTermDataArr) => {
+            console.log('Hello World!');
 
+            // Shows up as an empty array.
+            // So nothing is getting selected. Do we have to input first?
+            console.log('The toReturn:', longTermDataArr);
+
+            console.log('The toReturn:', longTermDataArr[0]); // Shows up as undefined (Since longTermDataArr is an empty array)
+            return longTermDataArr[0];
+          })
+        );
+        */
+
+        // # 3    The stuff inside map doesn't get executed.
+        // Reason: Because nothing is selected
+        /*
+        let toReturn = this.slRx.selectLongTermGoal(currentUser.__id, cId).pipe(
+          map((toReturn) => {
+            console.log('Hello World');
+            console.log('The toReturn:', toReturn);
+            return toReturn;
+          })
+        );
+        */
+
+        /*  # 4  and  # 5
+        //let toReturn = this.slRx.selectLongTermGoal(currentUser.__id, cId);  // Change return type above to Observable<LongTermGoal> if using this one
+        let toReturn = this.slRx.selectLongTermGoal<LongTermData>(currentUser.__id, cId);
+        
         if(toReturn) {
           console.log('toReturn is NOT null'); // THIS SHOWS UP
-          console.log('toReturn: ', toReturn);
-          
+          console.log('toReturn: ', toReturn);   
           
           toReturn.pipe(map((toReturn) => {
               console.log('shows in console');  // These don't show up. Read somewhere that it doesn't work with map and that tap should be used instead.
@@ -73,17 +104,13 @@ export class PageSelectors {
         }
 
         return toReturn;
-
-        /*
-        return this.slRx.selectLongTermGoals<LongTermData>([['__id', '==', currentUser.__id]], cId).pipe(
-          map((longTermDataArr) => {
-            return longTermDataArr[0];
-          })
-        );
         */
+
+        //return this.slRx.selectLongTermGoals<LongTermData>([['__id', '==', currentUser.__id]], cId);
+        
+        return this.slRx.selectLongTermGoal<LongTermData>(currentUser.__id, cId);
       }),
     );
-
   }
 
   /** Release memoized selectors. */
