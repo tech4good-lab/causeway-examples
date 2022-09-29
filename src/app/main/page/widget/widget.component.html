@@ -1,5 +1,6 @@
-<div class="widget" *ngIf="longTermData">
-<!-- <div class="widget"> -->
+<!-- longTermData is not null as tested in the selector. How come the widget doesn't show up if the commented div is used?-->
+<!-- <div class="widget" *ngIf="longTermData"> -->
+<div class="widget">
   <div class="title">Long-term Goals</div>
   <div class="goals">
     <!-- <div class="current-person" *ngFor="let goal of longTermData"> -->
@@ -16,6 +17,6 @@
       </div>
     </div>
   </div>
-  <!-- <img class="pencil" src="/assets/img/edit.svg" width="26" height="26"/> -->
-  <button class="pencil" (click)="edit()">Edit</button> <!-- Supposed to be the pencil-->
+  <!-- <img class="pencil" src="/assets/img/edit.svg" width="26" height="26" (click)="edit()" /> -->
+  <button class="pencil" width="26" height="26" (click)="edit()">Edit</button>
 </div>

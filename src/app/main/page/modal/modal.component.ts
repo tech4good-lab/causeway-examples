@@ -71,6 +71,5 @@ export class ModalComponent implements OnInit {
     this.data.updateGoals(this.longTermGoalsForm, this.loading$);
   }
 
-
   // --------------- OTHER -------------------------------
 }

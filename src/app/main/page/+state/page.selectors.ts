@@ -19,73 +19,71 @@ export class PageSelectors {
 
   /** Select the quarter data. */
   selectLongTermData(currentUser$: Observable<User>, cId: string): Observable<LongTermData> {
-    /*
+  //selectLongTermData(currentUser$: Observable<User>, cId: string): Observable<LongTermGoal> {
+    /* This doesn't work
     return currentUser$.pipe(
       switchMap((currentUser) => {
-        return this.slRx.selectLongTermGoal<LongTermData>(currentUser.__id, cId).pipe(
-          switchMap((longTermData) => {
-            return [longTermData];
-          })
-        );
+        return this.slRx.selectLongTermGoal<LongTermData>(currentUser.__id, cId);
       }),
     );
     */
 
-    console.log('cId', cId);
-
     return currentUser$.pipe(
       switchMap((currentUser) => {
-        console.log('currentUser.__id: ', currentUser.__id);
+        console.log('currentUser.__id', currentUser.__id);
 
         /*
-        this.slRx.selectLongTermGoal<LongTermData>(currentUser.__id, cId).pipe(
-          map((longTermData) => {
-            console.log('I got here');
-            console.log('longTermData.__id: ', longTermData.__id);
-            console.log('longTermData.oneYear: ', longTermData.oneYear);
-            console.log('longTermData.fiveYear: ', longTermData.fiveYear);
+        let toReturn = this.slRx.selectLongTermGoals<LongTermData>([['__id', '==', currentUser.__id]], cId).pipe(
+          map((longTermDataArr) => {
+            return longTermDataArr[0];
           })
         );
-        */
-
-        /*
-        let toReturn = this.slRx.selectLongTermGoal<LongTermData>(currentUser.__id, cId);
 
         if(toReturn) {
-          console.log('toReturn is not null');  // Shows up
-          //console.log('toReturn: ', toReturn);
-
-          console.log('toReturn.__id: ', toReturn.pipe(
-            map((toReturn) => {
-              return toReturn.__id;
-            })
-          ));
-          console.log('toReturn.oneYear: ', toReturn.pipe(
-            map((toReturn) => {
-              return toReturn.oneYear;
-            })
-          ));
-          console.log('toReturn.fiveYear: ', toReturn.pipe(
-            map((toReturn) => {
-              return toReturn.fiveYear;
-            })
-          ));
+          console.log('toReturn is NOT null');
+          console.log('toReturn: ', toReturn);
         } else {
-          console.log('toReturn is NULL');
+          console.log('toReturn is null');
         }
         */
 
+        //let toReturn = this.slRx.selectLongTermGoal(currentUser.__id, cId);
+        let toReturn = this.slRx.selectLongTermGoal<LongTermData>(currentUser.__id, cId);
+
+        if(toReturn) {
+          console.log('toReturn is NOT null'); // THIS SHOWS UP
+          console.log('toReturn: ', toReturn);
+          
+          
+          toReturn.pipe(map((toReturn) => {
+              console.log('shows in console');  // These don't show up. Read somewhere that it doesn't work with map and that tap should be used instead.
+              console.log('toReturn.__id', toReturn.__id);
+              console.log('toReturn.oneYear', toReturn.oneYear);
+              console.log('toReturn.fiveYear', toReturn.fiveYear);
+            })
+          );
+           
+          toReturn.pipe(tap(toReturn => {
+            console.log('shows in console');  // Still doesn't show up
+            })
+          );
+          
+        } else {
+          console.log('toReturn is null');
+        }
+
+        return toReturn;
+
         /*
-        this.slRx.selectLongTermGoal<LongTermData>(currentUser.__id, cId).pipe(
-          tap(longTermData =>
-            console.log('longTermData.__id: ', longTermData.__id), // Doesn't show anything
-          )
+        return this.slRx.selectLongTermGoals<LongTermData>([['__id', '==', currentUser.__id]], cId).pipe(
+          map((longTermDataArr) => {
+            return longTermDataArr[0];
+          })
         );
         */
-
-        return this.slRx.selectLongTermGoal<LongTermData>(currentUser.__id, cId);
       }),
     );
+
   }
 
   /** Release memoized selectors. */

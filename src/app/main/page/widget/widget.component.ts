@@ -15,6 +15,7 @@ export class WidgetComponent implements OnInit {
   // --------------- INPUTS AND OUTPUTS ---------
 
   /** The long term goals for this user. */
+  //@Input() longTermData: LongTermGoal;
   @Input() longTermData: LongTermData;
 
   /** Initiate edit of long term goals. */
