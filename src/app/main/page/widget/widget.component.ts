@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { WidgetAnimations } from './widget.animations';
-import { LongTermGoal } from '../../../core/store/long-term-goal/long-term-goal.model';  // ADDED
-import { LongTermData } from '../+state/page.model'; // ADDED
+import { LongTermGoal } from '../../../core/store/long-term-goal/long-term-goal.model';
+import { LongTermData } from '../+state/page.model';
 
 @Component({
   selector: 'app-widget',
@@ -15,11 +15,10 @@ export class WidgetComponent implements OnInit {
   // --------------- INPUTS AND OUTPUTS ---------
 
   /** The long term goals for this user. */
-  // @Input() longTermData: LongTermData;  // ADDED
-  @Input() longTermData: LongTermData[];  // ADDED
+  @Input() longTermData: LongTermData;
 
   /** Initiate edit of long term goals. */
-  @Output() editGoals: EventEmitter<void> = new EventEmitter<void>(); // ADDED
+  @Output() editGoals: EventEmitter<void> = new EventEmitter<void>();
 
   // --------------- LOCAL UI STATE ----------------------
 
@@ -33,11 +32,10 @@ export class WidgetComponent implements OnInit {
 
   // --------------- EVENT BINDING FUNCTIONS ---------------
 
-  /** Function for emitting an edit goals event */  // ADDED
+  /** Function for emitting an edit goals event */
   edit() {
     this.editGoals.emit()
   }
-
 
   // --------------- OTHER -------------------------------
 

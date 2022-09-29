@@ -1,15 +1,18 @@
 <div class="widget" *ngIf="longTermData">
+<!-- <div class="widget"> -->
   <div class="title">Long-term Goals</div>
   <div class="goals">
-    <div class="current-person" *ngFor="let goal of longTermData">
-    <!-- <div class="current-person"> -->
+    <!-- <div class="current-person" *ngFor="let goal of longTermData"> -->
+    <div class="current-person"> 
       <div class="one-year">
         <div class="one-year-title">1 year</div>
-        <div class="one-year-goal">{{ goal.oneYear }}</div>
+        <!-- <div class="one-year-goal">{{ goal.oneYear }}</div> -->
+        <div *ngIf="longTermData" class="one-year-goal">{{ longTermData.oneYear }}</div>
       </div>
       <div class="five-year">
         <div class="five-year-title">5 years</div>
-        <div class="five-year-goal">{{ goal.fiveYear }}</div>
+        <!-- <div class="five-year-goal">{{ goal.fiveYear }}</div> -->
+        <div *ngIf="longTermData" class="five-year-goal">{{ longTermData.fiveYear }}</div>
       </div>
     </div>
   </div>

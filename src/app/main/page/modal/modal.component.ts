@@ -25,11 +25,9 @@ export class ModalComponent implements OnInit {
   /** Local state for form info. */
   longTermGoalsForm: [LongTermGoalInForm, LongTermGoalInForm];
 
-
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: {
-      //longTermData: LongTermData,
-      longTermData: LongTermData[],
+      longTermData: LongTermData,
       updateGoals: (
         goals: [LongTermGoalInForm, LongTermGoalInForm],
         loading$: BehaviorSubject<boolean>,
@@ -41,18 +39,14 @@ export class ModalComponent implements OnInit {
   ngOnInit(): void {
     this.longTermGoalsForm = [
       { 
-        //__id: this.data.longTermData.longTermGoals[0].__id,
-        __id: this.data.longTermData[0].__id,
+        __id: this.data.longTermData.__id,
         year: 'one',
-        //text: this.data.longTermData.longTermGoals[0].oneYear,
-        text: this.data.longTermData[0].oneYear,
+        text: this.data.longTermData.oneYear,
       },
       { 
-        //__id: this.data.longTermData.longTermGoals[0].__id,
-        __id: this.data.longTermData[0].__id,
+        __id: this.data.longTermData.__id,
         year: 'five',
-        //text: this.data.longTermData.longTermGoals[0].fiveYear,
-        text: this.data.longTermData[0].fiveYear,
+        text: this.data.longTermData.fiveYear,
       },
     ];
   }

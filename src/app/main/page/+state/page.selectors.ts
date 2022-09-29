@@ -6,9 +6,9 @@ import { EntitySelectorService } from '../../../core/store/app.selectors';
 import { Observable, of, combineLatest } from 'rxjs';
 import { bufferTime, distinctUntilChanged, shareReplay, mergeMap, filter, switchMap, map } from 'rxjs/operators';
 import { User } from '../../../core/store/user/user.model';
-import { LongTermGoal } from '../../../core/store/long-term-goal/long-term-goal.model';  // ADDED
+import { LongTermGoal } from '../../../core/store/long-term-goal/long-term-goal.model';
 import { LongTermData } from './page.model';
-//import { LongTermGoalService } from '../../../core/store/long-term-goal/long-term-goal.service';  // ADDED
+import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -18,48 +18,72 @@ export class PageSelectors {
 
 
   /** Select the quarter data. */
-  //selectLongTermGoals(currentUser$: Observable<User>, cId: string): Observable<LongTermGoal[]> {
-  selectLongTermData(currentUser$: Observable<User>, cId: string): Observable<LongTermData[]> {
-  //selectLongTermData(currentUser$: Observable<User>, cId: string): Observable<LongTermData> {
-    /*
-    return combineLatest(longTermGoal$, currentUser$).pipe(
-      switchMap(([longTermGoal, currentUser]) => {
-        return this.slRx.selectLongTermGoal<LongTermGoal>(currentUser.__id, cId);
-      }),
-    );
-    */
-
+  selectLongTermData(currentUser$: Observable<User>, cId: string): Observable<LongTermData> {
     /*
     return currentUser$.pipe(
       switchMap((currentUser) => {
-        // return this.slRx.selectLongTermGoal<LongTermGoal>(currentUser.__id, cId);
-        return this.slRx.selectLongTermGoals<LongTermGoal>([['__id', '==', currentUser.__id]], cId);
+        return this.slRx.selectLongTermGoal<LongTermData>(currentUser.__id, cId).pipe(
+          switchMap((longTermData) => {
+            return [longTermData];
+          })
+        );
       }),
     );
     */
 
-    return combineLatest(currentUser$).pipe(
-      switchMap(([currentUser]) => {
-        return this.slRx.selectLongTermGoals<LongTermData>([['__id', '==', currentUser.__id]], cId);
-        //return this.slRx.selectLongTermGoal<LongTermData>(`${currentUser.__id}`, cId, (q) => ({
-        //return this.slRx.selectLongTermGoal<LongTermData>(currentUser.__id, cId, (q) => ({
-          /*
-          longTermGoals: this.slRx.selectLongTermGoals([
-            //['__id', '==', q.__id],
-            ['__id', '==', currentUser.__id],
-          ], cId)
-          */
-          
-          /*
-          longTermGoals: this.slRx.selectLongTermGoals([
-            ['__id', '==', currentUser.__id],
-          ], cId).pipe(
-            map(goals => {
-              return goals;
-            }),
-          ),  
-          */    
-        //}));
+    console.log('cId', cId);
+
+    return currentUser$.pipe(
+      switchMap((currentUser) => {
+        console.log('currentUser.__id: ', currentUser.__id);
+
+        /*
+        this.slRx.selectLongTermGoal<LongTermData>(currentUser.__id, cId).pipe(
+          map((longTermData) => {
+            console.log('I got here');
+            console.log('longTermData.__id: ', longTermData.__id);
+            console.log('longTermData.oneYear: ', longTermData.oneYear);
+            console.log('longTermData.fiveYear: ', longTermData.fiveYear);
+          })
+        );
+        */
+
+        /*
+        let toReturn = this.slRx.selectLongTermGoal<LongTermData>(currentUser.__id, cId);
+
+        if(toReturn) {
+          console.log('toReturn is not null');  // Shows up
+          //console.log('toReturn: ', toReturn);
+
+          console.log('toReturn.__id: ', toReturn.pipe(
+            map((toReturn) => {
+              return toReturn.__id;
+            })
+          ));
+          console.log('toReturn.oneYear: ', toReturn.pipe(
+            map((toReturn) => {
+              return toReturn.oneYear;
+            })
+          ));
+          console.log('toReturn.fiveYear: ', toReturn.pipe(
+            map((toReturn) => {
+              return toReturn.fiveYear;
+            })
+          ));
+        } else {
+          console.log('toReturn is NULL');
+        }
+        */
+
+        /*
+        this.slRx.selectLongTermGoal<LongTermData>(currentUser.__id, cId).pipe(
+          tap(longTermData =>
+            console.log('longTermData.__id: ', longTermData.__id), // Doesn't show anything
+          )
+        );
+        */
+
+        return this.slRx.selectLongTermGoal<LongTermData>(currentUser.__id, cId);
       }),
     );
   }

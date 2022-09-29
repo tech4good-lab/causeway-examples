@@ -10,14 +10,14 @@ import { Observable, Subject, BehaviorSubject, combineLatest } from 'rxjs';
 import { User } from '../../core/store/user/user.model';
 import { PageSelectors } from './+state/page.selectors';
 import { LoadData, Cleanup } from './+state/page.actions';
-import { ActionFlow, RouterNavigate } from '../../core/store/app.actions';  // ADDED
+import { ActionFlow, RouterNavigate } from '../../core/store/app.actions';
 import { UpdateUser } from '../../core/store/user/user.actions';
-import { LongTermGoal } from 'src/app/core/store/long-term-goal/long-term-goal.model'; // ADDED
-import { LongTermData, LongTermGoalInForm } from './+state/page.model'; // ADDED
-import { LongTermGoalActionTypes, UpdateLongTermGoal } from '../../core/store/long-term-goal/long-term-goal.actions'; // ADDED
-import { MatDialog, MatDialogRef } from '@angular/material/dialog'; // ADDED
-import { ModalComponent } from './modal/modal.component'; // ADDED
-import { ShowSnackbar } from '../../core/snackbar/snackbar.actions'; // ADDED
+import { LongTermGoal } from 'src/app/core/store/long-term-goal/long-term-goal.model';
+import { LongTermData, LongTermGoalInForm } from './+state/page.model';
+import { LongTermGoalActionTypes, UpdateLongTermGoal } from '../../core/store/long-term-goal/long-term-goal.actions';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { ModalComponent } from './modal/modal.component';
+import { ShowSnackbar } from '../../core/snackbar/snackbar.actions';
 
 
 @Component({
@@ -30,7 +30,7 @@ import { ShowSnackbar } from '../../core/snackbar/snackbar.actions'; // ADDED
 export class PageComponent implements OnInit {
 
   // --------------- ROUTE PARAMS & CURRENT USER ---------
-  /** The currently signed in user. */  // ADDED
+  /** The currently signed in user. */
   currentUser$: Observable<User> = this.store.pipe(
     select(fromAuth.selectUser),
   );
@@ -42,9 +42,8 @@ export class PageComponent implements OnInit {
   /** Container id for selectors and loading. */
   containerId: string = this.db.createId();
 
-  /** Get the long term goal data. */  // ADDED
-  longTermData$: Observable<LongTermData[]> = this.selectors.selectLongTermData(
-  //longTermData$: Observable<LongTermData> = this.selectors.selectLongTermData(
+  /** Get the long term goal data. */
+  longTermData$: Observable<LongTermData> = this.selectors.selectLongTermData(
     this.currentUser$,
     this.containerId,
   );
@@ -88,17 +87,12 @@ export class PageComponent implements OnInit {
             const actionSets = goals.map((g) => {
               return {
                 action: new UpdateLongTermGoal(g.__id, { 
-                  //oneYear: g.year === 'one' ? g.text : longTermData.longTermGoals[0].oneYear,
-                  //fiveYear: g.year === 'five' ? g.text : longTermData.longTermGoals[0].fiveYear,
-                  oneYear: g.year === 'one' ? g.text : longTermData[0].oneYear,
-                  fiveYear: g.year === 'five' ? g.text : longTermData[0].fiveYear,
+                  //oneYear: g.year === 'one' ? g.text : longTermData.oneYear,
+                  //fiveYear: g.year === 'five' ? g.text : longTermData.fiveYear,
 
                   // Does above one work?
-                  //oneYear: g.text,
-                  //fiveYear: g.text, 
-                  
-                  //text: g.text,
-                  //order: i + 1,
+                  oneYear: g.text,
+                  fiveYear: g.text, 
                 }, this.containerId),
                 responseActionTypes: {
                   success: LongTermGoalActionTypes.UPDATE_SUCCESS,

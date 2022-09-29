@@ -8,17 +8,15 @@
       <img class="close" src="/assets/img/close.svg" width="30" height="30" (click)="close()" />
     </div>
     <form cdkDropList (cdkDropListDropped)="drop($event)" class="tasks-form" #projectForm="ngForm" (ngSubmit)="submit()">
-      <!-- ORIGINAL
       <div class="task" cdkDrag *ngFor="let goal of longTermGoalsForm">
         <img class="drag-handle" src="/assets/img/drag.svg" height="20" />
         <mat-form-field class="task-field">
           <input matInput [(ngModel)]="goal.text" name="text-{{goal.__id}}" required>
         </mat-form-field>
       </div>
-      -->
 
       <!-- Forms show when below is used, data won't update though. So the *ngFor isn't working then? -->
-      
+      <!--
       <div class="task" cdkDrag>
         <img class="drag-handle" src="/assets/img/drag.svg" height="20" />
         <mat-form-field class="task-field">
@@ -29,6 +27,7 @@
           <input matInput [(ngModel)]="longTermGoalsForm[1].text" name="text-{{longTermGoalsForm[1].__id}}" required>
         </mat-form-field>
       </div>
+      -->
       
       <button class="save" type="submit" [disabled]="!projectForm.form.valid">Save</button>
     </form>
