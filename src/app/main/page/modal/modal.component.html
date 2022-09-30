@@ -1,3 +1,26 @@
-<div class="modal">
-  modal works!
+<div class="modal" *ngIf="{ loading: loading$ | async } as load">
+  <ng-container *ngIf="!load.loading">
+    <div class="header">
+      <div class="text-header">
+        <div class="title"> Long Term Goals</div>
+        <div class="title"> Plan Your Future </div>
+        <!---<div class="date">{{ data.quarterData.startTime | date:'M' }}/{{ data.quarterData.startTime | date:'d' }} - {{ data.quarterData.endTime | date:'M' }}/{{ data.quarterData.endTime | date:'d' }}</div>---->
+      </div>
+    <!--<img class="close" src="/assets/img/close.svg" width="30" height="30" (click)="close()" />---->
+    </div>
+    <form cdkDropList (cdkDropListDropped)="drop($event)" class="tasks-form" #projectForm="ngForm" (ngSubmit)="submit()">
+      <div class="task" cdkDrag *ngFor="let goal of quarterGoalsForm">
+        <!---<img class="drag-handle" src="/assets/img/drag.svg" height="20" />---->
+        <mat-form-field class="task-field">
+          <input matInput [(ngModel)]="goal.text" name="text-{{goal.__id}}" required>
+          <!---<input matInput [(ngModel)]="goal.text">---->
+        </mat-form-field>
+      </div>
+      <button class="save" type="submit" [disabled]="!projectForm.form.valid">Save</button>
+    </form>
+  </ng-container>
+  <ng-container *ngIf="load.loading">
+    <mat-spinner [diameter]="60" [strokeWidth]="2"></mat-spinner>
+    <div class="loading-label">updating goals</div>
+  </ng-container>
 </div>

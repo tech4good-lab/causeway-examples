@@ -12,6 +12,8 @@ import { ActionFlow, RouterNavigate, LoadAction, Unsubscribe } from '../../../co
 import { PageActionTypes, Cleanup, LoadData } from './page.actions';
 
 import { StreamUser } from '../../../core/store/user/user.actions';
+import { StreamQuarter } from '../../../core/store/quarter/quarter.actions';
+import { StreamQuarterGoal } from '../../../core/store/quarter-goal/quarter-goal.actions';
 
 @Injectable()
 export class PageEffects {
@@ -21,10 +23,20 @@ export class PageEffects {
       ofType<LoadData>(PageActionTypes.LOAD_DATA),
       mergeMap((action: LoadData) => {
         const loadId = action.payload.containerId;
-        return [];
+        const qst = action.payload.quarterStartTime;
+        const currentUser = action.payload.currentUser;
+
+        return [new StreamQuarter([['__id', '==', `${qst}`]], {}, loadId, (q) => [
+          new StreamQuarterGoal([
+            ['__userId', '==', currentUser.__id],
+            ['__quarterId', '==', q.__id],
+          ], {}, loadId)
+        ])];
       })
     )
   );
+
+  
 
   /** Unsubscribe connections from Firebase. */
   cleanup$: Observable<Action> = createEffect(() =>

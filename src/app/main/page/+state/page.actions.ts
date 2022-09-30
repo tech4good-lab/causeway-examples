@@ -12,6 +12,8 @@ export class LoadData implements Action {
 
   constructor(
     public payload: {
+      quarterStartTime: number,
+      currentUser: User,
       containerId: string;
     }
   ) {}

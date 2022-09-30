@@ -1,1 +1,18 @@
-<div class="widget">widget!</div>
+<div class="widget" *ngIf="quarterData">
+  <div class="header">
+    <div class="title"> Long Term Goals</div>
+    <!--<div class="date">{{ quarterData.startTime | date:'M' }}/{{ quarterData.startTime | date:'d' }} - {{ quarterData.endTime | date:'M' }}/{{ quarterData.endTime | date:'d' }}</div>--->
+  </div>
+  <div class="tasks">
+    <!--<div class="task" *ngFor="let goal of quarterData.quarterGoals">--->
+      <!--<div class="number">{{ goal.order }}</div>---->
+      <!---<div class = "hi" *ngIf="quarterData.quarterGoals[0].order < 3">---->
+      <div> 1 year </div>
+      <div class="text">{{ quarterData.quarterGoals[0].text }}</div>
+      <div> 5 year </div>
+      <div class="text">{{ quarterData.quarterGoals[1].text }}</div>
+     <!-- </div>---->
+  </div>
+  <!---<img class="pencil" src="/assets/img/edit.svg" width="26" height="26" (click)="edit()" />---->
+  <button (click)="edit()" > Edit </button>
+</div>
