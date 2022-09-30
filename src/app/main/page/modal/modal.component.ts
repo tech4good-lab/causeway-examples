@@ -84,3 +84,5 @@ export class ModalComponent implements OnInit {
 
   // --------------- OTHER -------------------------------
 }
+
+

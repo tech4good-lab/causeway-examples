@@ -5,6 +5,11 @@ import { FormsModule } from '@angular/forms';
 
 // External Modules
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 // Containers
 
@@ -19,6 +24,11 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     FormsModule,
     // External Modules
     MatSnackBarModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    DragDropModule,
+    MatProgressSpinnerModule,
   ],
   declarations: [
     // Containers
@@ -30,6 +40,11 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     FormsModule,
     // External Modules
     MatSnackBarModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    DragDropModule,
+    MatProgressSpinnerModule,
     // Containers
     // Components
     // Pipes
