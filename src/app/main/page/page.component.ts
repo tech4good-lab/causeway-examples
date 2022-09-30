@@ -42,8 +42,8 @@ export class PageComponent implements OnInit {
   containerId: string = this.db.createId();
 
   /** Get the long term goal data. */
-  //longTermData$: Observable<LongTermGoal> = this.selectors.selectLongTermData(
-  longTermData$: Observable<LongTermData> = this.selectors.selectLongTermData(
+  longTermData$: Observable<LongTermGoal> = this.selectors.selectLongTermData(
+  //longTermData$: Observable<LongTermData> = this.selectors.selectLongTermData(
   //longTermData$: Observable<LongTermData[]> = this.selectors.selectLongTermData(
     this.currentUser$,
     this.containerId,

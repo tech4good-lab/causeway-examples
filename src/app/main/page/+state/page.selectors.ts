@@ -18,9 +18,9 @@ export class PageSelectors {
 
 
   /** Select the long term goal data. */
-  //selectLongTermData(currentUser$: Observable<User>, cId: string): Observable<LongTermGoal> {
+  selectLongTermData(currentUser$: Observable<User>, cId: string): Observable<LongTermGoal> {
   //selectLongTermData(currentUser$: Observable<User>, cId: string): Observable<LongTermData[]> { 
-  selectLongTermData(currentUser$: Observable<User>, cId: string): Observable<LongTermData> {  // ORIGINAL
+  //selectLongTermData(currentUser$: Observable<User>, cId: string): Observable<LongTermData> {  // ORIGINAL
 
     /* ORIGINAL (Doesn't work. See reasons below)
     return currentUser$.pipe(
@@ -106,9 +106,40 @@ export class PageSelectors {
         return toReturn;
         */
 
-        //return this.slRx.selectLongTermGoals<LongTermData>([['__id', '==', currentUser.__id]], cId);
+        //return this.slRx.selectLongTermGoal<LongTermData>(currentUser.__id, cId);
+
+        /*
+        let toReturn = this.slRx.selectLongTermGoals<LongTermData>([['__id', '==', currentUser.__id]], cId, (goal) => ({
+          //__id: this.slRx.selectLongTermGoal(goal.__id, cId),
+          oneYear: this.slRx.selectLongTermGoal(goal.__id, cId).pipe(
+            map((longTermGoal) => {
+              return longTermGoal.oneYear;
+            })
+          ),
+          fiveYear: this.slRx.selectLongTermGoal(goal.__id, cId).pipe(
+            map((longTermGoal) => {
+              return longTermGoal.fiveYear;
+            })
+          ),
+        })).pipe(
+          map((longTermDataArr) => {
+            return longTermDataArr[0];
+          })
+        );
+        */
+
+        //let toReturn = this.slRx.selectLongTermGoals<LongTermData>([['__id', '==', currentUser.__id]], cId).pipe(
+        let toReturn = this.slRx.selectLongTermGoals([['__id', '==', currentUser.__id]], cId).pipe(
+          //switchMap((longTermGoalArr) => {
+          map((longTermGoalArr) => {
+            let theLongTermGoal = longTermGoalArr[0];
+            //return this.slRx.selectLongTermGoal<LongTermData>(theLongTermData.__id, cId);  // If using switchMap
+            return theLongTermGoal;  // If using map
+          })
+        );
+
+        return toReturn;
         
-        return this.slRx.selectLongTermGoal<LongTermData>(currentUser.__id, cId);
       }),
     );
   }

@@ -27,8 +27,8 @@ export class ModalComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: {
-      longTermData: LongTermData,
-      //longTermData: LongTermGoal,
+      //longTermData: LongTermData,
+      longTermData: LongTermGoal,
       //longTermData: LongTermData[], // See withLatestFrom(this.longTermData$)    If using pipe(...) on that, just use type LongTermData instead
       updateGoals: (
         goals: [LongTermGoalInForm, LongTermGoalInForm],
