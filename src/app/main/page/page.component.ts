@@ -13,6 +13,7 @@ import { QuarterData, QuarterGoalInForm } from './+state/page.model';
 import { LoadData, Cleanup } from './+state/page.actions';
 import { RouterNavigate } from '../../core/store/app.actions';
 import { UpdateUser } from '../../core/store/user/user.actions';
+import { QuarterGoalActionTypes, UpdateQuarterGoal } from '../../core/store/quarter-goal/quarter-goal.actions';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ModalComponent } from './modal/modal.component';
 
@@ -122,6 +123,18 @@ export class PageComponent implements OnInit {
     this.saveGoals$.pipe(
       takeUntil(this.unsubscribe$),
     ).subscribe(({ goals, loading$ }) => {
+      // Dispatch the UpdateQuarterGoal actions (simple)
+      for (let i=0; i < goals.length; i++) {
+        let g = goals[i];
+        this.store.dispatch(
+          new UpdateQuarterGoal(g.__id, {
+            text: g.text,
+            order: i + 1,
+          }, this.containerId),
+        );
+      }
+
+      // Close the modal
       this.dialogRef.close();
     });
 
