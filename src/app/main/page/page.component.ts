@@ -9,7 +9,7 @@ import { tap, filter, withLatestFrom, take, takeUntil, map, subscribeOn } from '
 import { of, distinctUntilChanged, interval, Observable, Subject, BehaviorSubject, combineLatest } from 'rxjs';
 import { User } from '../../core/store/user/user.model';
 import { PageSelectors } from './+state/page.selectors';
-import { QuarterData } from './+state/page.model';
+import { QuarterData, QuarterGoalInForm } from './+state/page.model';
 import { LoadData, Cleanup } from './+state/page.actions';
 import { RouterNavigate } from '../../core/store/app.actions';
 import { UpdateUser } from '../../core/store/user/user.actions';
@@ -60,6 +60,12 @@ export class PageComponent implements OnInit {
 
   // --------------- EVENT BINDING -----------------------
 
+  /** Event for opening the edit modal. */
+  openEditModal$: Subject<void> = new Subject();
+
+  /** Event for saving goal edits. */
+  saveGoals$: Subject<{ goals: [QuarterGoalInForm, QuarterGoalInForm, QuarterGoalInForm], loading$: BehaviorSubject<boolean> }> = new Subject();
+
   // --------------- HELPER FUNCTIONS AND OTHER ----------
 
   /** Helper function for converting timestamp to quarter start time. */
@@ -86,6 +92,21 @@ export class PageComponent implements OnInit {
 
   ngOnInit() { 
     // --------------- EVENT HANDLING ----------------------
+
+    /** Handle openEditModal events. */
+    this.openEditModal$.pipe(
+      withLatestFrom(this.quarterData$),
+      takeUntil(this.unsubscribe$),
+    ).subscribe(([_, quarterData]) => {
+      console.log("in open edit modal");
+    });
+
+    /** Handle save goals events. */
+    this.saveGoals$.pipe(
+      takeUntil(this.unsubscribe$),
+    ).subscribe(({ goals, loading$ }) => {
+      console.log("in save goals");
+    });
 
     // --------------- LOAD DATA ---------------------------
     // Once everything is set up, load the data for the role.

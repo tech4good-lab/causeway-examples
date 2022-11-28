@@ -1,3 +1,4 @@
 <div class="page-container">
-  <app-widget [quarterData]="quarterData$ | async"></app-widget>
+  <app-widget [quarterData]="quarterData$ | async"
+    (editGoals)="openEditModal$.next()"></app-widget>
 </div>
