@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, input, output, signal, computed, inject, WritableSignal, Signal } from '@angular/core';
 import { ModalAnimations } from './modal.animations';
 
 @Component({
@@ -9,17 +9,20 @@ import { ModalAnimations } from './modal.animations';
   animations: ModalAnimations,
 })
 export class ModalComponent implements OnInit {
+  
   // --------------- INPUTS AND OUTPUTS ------------------
 
-  // --------------- LOCAL AND GLOBAL STATE --------------
+  // --------------- LOCAL UI STATE ----------------------
 
-  // --------------- DATA BINDING ------------------------
+  // --------------- COMPUTED DATA -----------------------
 
-  // --------------- EVENT BINDING -----------------------
+  // --------------- EVENT HANDLING ----------------------
 
-  // --------------- HELPER FUNCTIONS AND OTHER ----------
+  // --------------- HELPERS AND SETUP -------------------
 
-  constructor() { }
+  constructor(
+  ) {
+  }
 
   ngOnInit(): void {
   }

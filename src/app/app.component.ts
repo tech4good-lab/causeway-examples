@@ -1,7 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { select, Store } from '@ngrx/store';
-import * as fromStore from './core/store/app.reducer';
-import { LoadAuth } from './core/store/auth/auth.actions';
+import { Component, OnInit, inject } from '@angular/core';
+import { AuthStore } from './core/store/auth/auth.store';
 
 @Component({
   selector: 'app-root',
@@ -9,14 +7,12 @@ import { LoadAuth } from './core/store/auth/auth.actions';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
+  readonly authStore = inject(AuthStore);
 
-  constructor(
-    private store: Store<fromStore.State>,
-  ) {
-  }
+  constructor() { }
 
   ngOnInit() {
     // Load auth into store    
-    this.store.dispatch( new LoadAuth() );
+    this.authStore.loadAuth();
   }
 }

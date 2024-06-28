@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 // External Modules
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -16,7 +16,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
   imports: [
     CommonModule,
     RouterModule,
-    FormsModule,
+    ReactiveFormsModule,
     // External Modules
     MatSnackBarModule,
   ],
@@ -27,7 +27,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
   ],
   exports: [
     RouterModule,
-    FormsModule,
+    ReactiveFormsModule,
     // External Modules
     MatSnackBarModule,
     // Containers
