@@ -2,7 +2,7 @@ import { inject, effect, WritableSignal } from '@angular/core';
 import { signalStore, patchState, withState, withMethods } from '@ngrx/signals';
 import { withEntities, removeEntity, updateEntity, setEntity, removeEntities, setEntities } from '@ngrx/signals/entities';
 import { FirebaseService } from '../../firebase/firebase.service';
-import { EntityLoadQuery, EntityStreamQuery, selectEntities, processLoadQueries } from '../app.store';
+import { EntityLoadQuery, EntityStreamQuery, selectEntities, processLoadQueries, withEntitiesAndSelectMethods } from '../app.store';
 import { QueryParams, QueryOptions, AnyEntity } from '../app.model';
 import { CachedListenersService } from '../../firebase/cached-listeners.service';
 import { Timestamp, AggregateSpec, AggregateSpecData } from '@angular/fire/firestore';
@@ -40,23 +40,7 @@ export class StreamQuarterlyGoal extends EntityStreamQuery<QuarterlyGoal> {
 
 export const QuarterlyGoalStore = signalStore(
   { providedIn: 'root' },
-  withEntities<QuarterlyGoal>(),
-  withMethods((store) => ({
-    selectEntity(id: string): QuarterlyGoal {
-      return store.entityMap()[id];
-    },
-    selectFirst(queryParams: QueryParams, queryOptions: QueryOptions): QuarterlyGoal {
-      const entities = selectEntities<QuarterlyGoal>(store.entityMap(), queryParams, queryOptions);
-      if (entities && entities.length > 0) {
-        return entities[0];
-      } else {
-        return undefined;
-      }
-    },
-    selectEntities(queryParams: QueryParams, queryOptions: QueryOptions): QuarterlyGoal[] {
-      return selectEntities<QuarterlyGoal>(store.entityMap(), queryParams, queryOptions);
-    },
-  })),
+  withEntitiesAndSelectMethods<QuarterlyGoal>(),
   withMethods((store, cachedLoads = inject(CachedListenersService), db = inject(FirebaseService)) => ({
     // streaming tries to reduce redundant loads through the following:
     // - caching listeners and reusing them with a 5-second delay after moving to a new container before unsubscribing
@@ -163,7 +147,7 @@ export const QuarterlyGoalStore = signalStore(
         if (loadQueries) {
           // retrieve entities from store for loading queries
           // note we cannot simply use entities from load since it may not be all entities (only those for which updatedAt > lastLoadTime)
-          const allQueriedEntities = store.selectEntities(queryParams, queryOptions);
+          const allQueriedEntities: QuarterlyGoal[] = store.selectEntities(queryParams, queryOptions);
           await processLoadQueries<QuarterlyGoal>(allQueriedEntities, loadQueries);
         }
       } catch (e) {

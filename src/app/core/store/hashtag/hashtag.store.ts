@@ -2,7 +2,7 @@ import { inject, effect, WritableSignal } from '@angular/core';
 import { signalStore, patchState, withState, withMethods } from '@ngrx/signals';
 import { withEntities, removeEntity, updateEntity, setEntity, removeEntities, setEntities } from '@ngrx/signals/entities';
 import { FirebaseService } from '../../firebase/firebase.service';
-import { EntityLoadQuery, EntityStreamQuery, selectEntities, processLoadQueries } from '../app.store';
+import { EntityLoadQuery, EntityStreamQuery, selectEntities, processLoadQueries, withEntitiesAndSelectMethods } from '../app.store';
 import { QueryParams, QueryOptions, AnyEntity } from '../app.model';
 import { CachedListenersService } from '../../firebase/cached-listeners.service';
 import { Timestamp, AggregateSpec, AggregateSpecData } from '@angular/fire/firestore';
@@ -170,8 +170,7 @@ export const HashtagStore = signalStore(
         options?.loading?.set(true);
 
         const queryParamsNotDeleted: QueryParams = [...queryParams, ['_deleted', '==', false]];
-        const querySnapshot = await db.count('hashtags', queryParamsNotDeleted, queryOptions);
-        return querySnapshot.data().count;
+        return await db.count('hashtags', queryParamsNotDeleted, queryOptions);
       } catch (e) {
         console.error(e);
         throw e;
@@ -180,23 +179,22 @@ export const HashtagStore = signalStore(
         options?.loading?.set(false);
       }
     },
-    async aggregate<S extends AggregateSpec>(
+    async aggregate<S extends Record<string, number>>(
       queryParams: QueryParams,
       queryOptions: QueryOptions,
-      aggregateSpec: S,
+      aggregateSpec: { [K in keyof S]: [string] | [string, string] },
       options?: {
         loading?: WritableSignal<boolean>,
       },
-    ): Promise<AggregateSpecData<S>> {
+    ): Promise<{ [K in keyof S]: number }> {
       try {
         // start loading icon if available
         options?.loading?.set(true);
 
         const queryParamsNotDeleted: QueryParams = [...queryParams, ['_deleted', '==', false]];
-        const querySnapshot = await db.aggregate<S>(
+        return db.aggregate<S>(
           'hashtags', queryParamsNotDeleted, queryOptions, aggregateSpec,
         );
-        return querySnapshot.data();
       } catch (e) {
         console.error(e);
         throw e;

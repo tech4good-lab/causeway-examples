@@ -73,9 +73,11 @@ export class MockDBService {
   readonly reflectionDB = inject(ReflectionDB);
   readonly userDB = inject(UserDB);
   readonly weeklyGoalDB = inject(WeeklyGoalDB);
-
-  // helper function
+  
   constructor() {
+  }
+
+  initDB() {
 
     patchState(this.userDB, setAllEntities([
       {

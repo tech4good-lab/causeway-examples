@@ -131,8 +131,8 @@ export class FirebaseService {
     queryParams: [string, string, any][],
     queryOptions?: { [index: string]: any },
   ): Promise<S[]> {
-    const store = this.DB[collectionName];
-    return store.selectEntities(queryParams, queryOptions);
+    const db = this.DB[collectionName];
+    return db.selectEntities(queryParams, queryOptions);
   }
 
   async count(

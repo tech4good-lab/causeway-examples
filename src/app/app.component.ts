@@ -1,5 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { AuthStore } from './core/store/auth/auth.store';
+import { MockDBService } from './core/firebase/mock-db.service';
 
 @Component({
   selector: 'app-root',
@@ -9,10 +10,14 @@ import { AuthStore } from './core/store/auth/auth.store';
 export class AppComponent implements OnInit {
   readonly authStore = inject(AuthStore);
 
-  constructor() { }
+  constructor(
+    private mockDB: MockDBService,
+  ) { }
 
   ngOnInit() {
     // Load auth into store    
     this.authStore.loadAuth();
+
+    this.mockDB.initDB();
   }
 }

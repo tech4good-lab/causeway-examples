@@ -186,8 +186,7 @@ export const ReflectionStore = signalStore(
         options?.loading?.set(true);
 
         const queryParamsNotDeleted: QueryParams = [...queryParams, ['_deleted', '==', false]];
-        const querySnapshot = await db.count('reflections', queryParamsNotDeleted, queryOptions);
-        return querySnapshot.data().count;
+        return await db.count('reflections', queryParamsNotDeleted, queryOptions);
       } catch (e) {
         console.error(e);
         throw e;
@@ -196,23 +195,22 @@ export const ReflectionStore = signalStore(
         options?.loading?.set(false);
       }
     },
-    async aggregate<S extends AggregateSpec>(
+    async aggregate<S extends Record<string, number>>(
       queryParams: QueryParams,
       queryOptions: QueryOptions,
-      aggregateSpec: S,
+      aggregateSpec: { [K in keyof S]: [string] | [string, string] },
       options?: {
         loading?: WritableSignal<boolean>,
       },
-    ): Promise<AggregateSpecData<S>> {
+    ): Promise<{ [K in keyof S]: number }> {
       try {
         // start loading icon if available
         options?.loading?.set(true);
 
         const queryParamsNotDeleted: QueryParams = [...queryParams, ['_deleted', '==', false]];
-        const querySnapshot = await db.aggregate<S>(
+        return await db.aggregate<S>(
           'reflections', queryParamsNotDeleted, queryOptions, aggregateSpec,
         );
-        return querySnapshot.data();
       } catch (e) {
         console.error(e);
         throw e;
