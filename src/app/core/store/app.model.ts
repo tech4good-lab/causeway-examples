@@ -5,7 +5,6 @@ import { LongTermGoal } from './long-term-goal/long-term-goal.model';
 import { QuarterlyGoal } from './quarterly-goal/quarterly-goal.model';
 import { WeeklyGoal } from './weekly-goal/weekly-goal.model';
 import { Reflection } from './reflection/reflection.model';
-import { UserContext } from './user-context/user-context.model';
 
 export type AnyEntity =
   User |
@@ -13,8 +12,7 @@ export type AnyEntity =
   LongTermGoal |
   QuarterlyGoal |
   WeeklyGoal |
-  Reflection |
-  UserContext;
+  Reflection;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type QueryParams = [string, string, any][];

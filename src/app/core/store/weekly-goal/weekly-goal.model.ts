@@ -10,7 +10,7 @@ export interface WeeklyGoal {
   completed: boolean;
   order: number;
   endDate?: Timestamp;
-  _createdAt?: Date;
-  _updatedAt?: Date;
+  _createdAt?: Timestamp;
+  _updatedAt?: Timestamp;
   _deleted?: boolean;
 }

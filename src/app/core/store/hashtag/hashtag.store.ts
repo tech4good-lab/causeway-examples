@@ -38,26 +38,9 @@ export class StreamHashtag extends EntityStreamQuery<Hashtag> {
   }
 }
 
-
 export const HashtagStore = signalStore(
   { providedIn: 'root' },
-  withEntities<Hashtag>(),
-  withMethods((store) => ({
-    selectEntity(id: string): Hashtag {
-      return store.entityMap()[id];
-    },
-    selectFirst(queryParams: QueryParams, queryOptions: QueryOptions): Hashtag {
-      const entities = selectEntities<Hashtag>(store.entityMap(), queryParams, queryOptions);
-      if (entities && entities.length > 0) {
-        return entities[0];
-      } else {
-        return undefined;
-      }
-    },
-    selectEntities(queryParams: QueryParams, queryOptions: QueryOptions): Hashtag[] {
-      return selectEntities<Hashtag>(store.entityMap(), queryParams, queryOptions);
-    },
-  })),
+  withEntitiesAndSelectMethods<Hashtag>(),
   withMethods((store, cachedLoads = inject(CachedListenersService), db = inject(FirebaseService)) => ({
     // streaming tries to reduce redundant loads through the following:
     // - caching listeners and reusing them with a 5-second delay after moving to a new container before unsubscribing

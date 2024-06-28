@@ -1,4 +1,4 @@
-import { inject, effect } from '@angular/core';
+import { inject, effect, Injector } from '@angular/core';
 import { signalStore, patchState, withState, withMethods } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { User, AccessState } from '../user/user.model';
@@ -24,29 +24,11 @@ export const AuthStore = signalStore(
     loadAuth: rxMethod<void>(
       pipe(
         // Every time firebase or db user changes, we want to update auth store
-        switchMap(() => db.afUser().pipe(
-          catchError((e) => {
-            console.error(e);
-            return EMPTY;
-          }),
-        )),
-        switchMap((afUser) => {
-          if (afUser) {
-            return db.queryObjValueChanges('users', afUser.uid).pipe(
-              map((dbUser) => ({ afUser, dbUser })),
-              catchError((e) => {
-                console.error(e);
-                return EMPTY;
-              }),
-            );
-          } else {
-            return of({ afUser, dbUser: null });
-          }
-        }),
-        tap(async ({ afUser, dbUser }) => {
-          if (!afUser) {
+        switchMap(() => db.afUser()),
+        tap((dbUser: User) => {
+          if (!dbUser) {
             patchState(store, { user: undefined });
-          } else if (afUser && dbUser) {
+          } else {
             patchState(store, { user: dbUser });
           }
         }),
@@ -62,7 +44,7 @@ export const AuthStore = signalStore(
         const loginResult = await db.login(provider, params.scope);
         const afUser = loginResult.user;
         // could this be problematic if it hits a cached value?
-        const dbUser: User = await db.queryObjOnce('users', afUser.uid);
+        const dbUser: User = await db.getEntity('users', afUser.uid);
 
         const navLocation = ['/home'];
         // update the token if there is already a dbUser

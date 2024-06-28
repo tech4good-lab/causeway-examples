@@ -116,7 +116,7 @@ export class CachedListenersService {
       // if the connection does not exist, create it and initialize the
       // registeredSet to include destroyRef
       // this function also will subscribe and link to the store
-      connection = this.createConnection(collection, store, queryParams, queryOptions, destroyRef);
+      connection = this.createConnection(collection, store, queryParams, queryOptions, destroyRef, injector);
       this.connectionByQueryKey[connection.queryKey] = connection;
     }
 
@@ -221,7 +221,7 @@ export class CachedListenersService {
     return connection;
   }
 
-  private createConnection(collection: string, store, queryParams: QueryParams, queryOptions: QueryOptions, destroyRef: DestroyRef): CachedConnection {
+  private createConnection(collection: string, store, queryParams: QueryParams, queryOptions: QueryOptions, destroyRef: DestroyRef, injector): CachedConnection {
     // console.log("CONNECT " + this.getQueryKey(collection, queryParams, queryOptions));
 
     // ------------ DEFINE OBSERVABLES FOR DISCONNECTING ------------------------------
@@ -238,23 +238,23 @@ export class CachedListenersService {
     // ------------ HANDLE PATCHING TO STORE ------------------------------------------
 
     // Handle patching to the store
-    this.db.queryListStateChanges(collection, queryParams, queryOptions).pipe(
+    this.db.streamEntitiesChanges(collection, queryParams, queryOptions, injector).pipe(
       takeUntil(disconnectObs$),
-    ).subscribe((fbPayload: DocumentChange[]) => {
+    ).subscribe((fbPayload) => {
       // Handle all the added entities
       const entitiesToAdd = fbPayload
-        .filter((dc) => dc.type === 'added' && !dc.doc.data()['_deleted'])
-        .map((dc) => dc.doc.data());
+        .filter((dc) => dc.type === 'added' && !dc.docData['_deleted'])
+        .map((dc) => dc.docData);
 
       // Handle all the modified entities
       const entitiesToModify = fbPayload
-        .filter((dc) => dc.type === 'modified' && !dc.doc.data()['_deleted'])
-        .map((dc) => dc.doc.data());
+        .filter((dc) => dc.type === 'modified' && !dc.docData['_deleted'])
+        .map((dc) => dc.docData);
 
       // Handle all the removed entities
       const entitiesToRemove = fbPayload
-        .filter((dc) => dc.type === 'modified' && dc.doc.data()['_deleted'])
-        .map((dc) => dc.doc.data()['__id']);
+        .filter((dc) => dc.type === 'modified' && dc.docData['_deleted'])
+        .map((dc) => dc.docData['__id']);
 
       // Handle changes of the 'removed' type. In general, firebase 'removed'
       // could be due to no longer matching the stream query rather than being
@@ -263,13 +263,13 @@ export class CachedListenersService {
       // if there were manual deletions in the database, there could still be changes
       // of this type which the below code seeks to handle
       const entitiesToModify2 = fbPayload
-        .filter((dc) => dc.type === 'removed' && !entityInQueryResults(dc.doc.data(), queryParams, queryOptions))
-        .map((dc) => dc.doc.data());
+        .filter((dc) => dc.type === 'removed' && !entityInQueryResults(dc.docData, queryParams, queryOptions))
+        .map((dc) => dc.docData);
 
 
       const entitiesToRemove2 = fbPayload
-        .filter((dc) => dc.type === 'removed' && entityInQueryResults(dc.doc.data(), queryParams, queryOptions))
-        .map((dc) => dc.doc.data()['__id']);
+        .filter((dc) => dc.type === 'removed' && entityInQueryResults(dc.docData, queryParams, queryOptions))
+        .map((dc) => dc.docData['__id']);
 
       // Patch all the changes to the store
       patchState(store, setEntities(entitiesToAdd, { idKey: '__id' }));
