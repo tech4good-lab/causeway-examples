@@ -1,17 +1,11 @@
-import { ChangeDetectionStrategy, Component, OnInit, Input } from '@angular/core';
-import { ParamMap, ActivatedRoute } from '@angular/router';
-import { Store, select } from '@ngrx/store';
-import * as fromStore from '../../core/store/app.reducer';
-import * as fromAuth from '../../core/store/auth/auth.reducer';
+import { ChangeDetectionStrategy, Component, OnInit, input, signal, computed, inject, WritableSignal, Signal, effect } from '@angular/core';
 import { PageAnimations } from './page.animations';
-import { FirebaseService } from '../../core/firebase/firebase.service';
-import { tap, filter, withLatestFrom, take, takeUntil, map, subscribeOn } from 'rxjs/operators';
-import { distinctUntilChanged, interval, Observable, Subject, BehaviorSubject, combineLatest } from 'rxjs';
-import { User } from '../../core/store/user/user.model';
-import { PageSelectors } from './+state/page.selectors';
-import { LoadData, Cleanup } from './+state/page.actions';
-import { RouterNavigate } from '../../core/store/app.actions';
-import { UpdateUser } from '../../core/store/user/user.actions';
+import { QuarterlyGoalStore } from '../../core/store/quarterly-goal/quarterly-goal.store';
+import { HashtagStore } from '../../core/store/hashtag/hashtag.store';
+import { UserStore } from '../../core/store/user/user.store';
+import { ReflectionStore } from '../../core/store/reflection/reflection.store';
+import { WeeklyGoalStore } from '../../core/store/weekly-goal/weekly-goal.store';
+import { LongTermGoalStore } from '../../core/store/long-term-goal/long-term-goal.store';
 
 @Component({
   selector: 'app-page',
@@ -21,47 +15,47 @@ import { UpdateUser } from '../../core/store/user/user.actions';
   animations: PageAnimations,
 })
 export class PageComponent implements OnInit {
+  readonly quarterlyGoalStore = inject(QuarterlyGoalStore);
+  readonly hashtagStore = inject(HashtagStore);
+  readonly longTermGoalStore = inject(LongTermGoalStore);
+  readonly reflectionStore = inject(ReflectionStore);
+  readonly userStore = inject(UserStore);
+  readonly weeklyGoalStore = inject(WeeklyGoalStore);
 
-  // --------------- ROUTE PARAMS & CURRENT USER ---------
+  // --------------- INPUTS AND OUTPUTS ------------------
 
-  // --------------- LOCAL AND GLOBAL STATE --------------
+  // --------------- LOCAL UI STATE ----------------------
 
-  // --------------- DB ENTITY DATA ----------------------
+  // --------------- COMPUTED DATA -----------------------
 
-  /** Container id for selectors and loading. */
-  containerId: string = this.db.createId();
+  // --------------- EVENT HANDLING ----------------------
 
-  // --------------- DATA BINDING ------------------------
-
-  // --------------- EVENT BINDING -----------------------
-
-  // --------------- HELPER FUNCTIONS AND OTHER ----------
-
-  /** Unsubscribe observable for subscriptions. */
-  unsubscribe$: Subject<void> = new Subject();
+  // --------------- HELPERS AND SETUP --------------------------
 
   constructor(
-    private route: ActivatedRoute,
-    private selectors: PageSelectors,
-    private store: Store<fromStore.State>,
-    private db: FirebaseService
   ) {
+    effect(() => {
+      console.log('Quarterly Goal', this.quarterlyGoalStore.entities());
+    });
+    effect(() => {
+      console.log('Hashtag', this.hashtagStore.entities());
+    });
+    effect(() => {
+      console.log('LongTermGoal', this.longTermGoalStore.entities());
+    });
+    effect(() => {
+      console.log('Reflection', this.reflectionStore.entities());
+    });
+    effect(() => {
+      console.log('User', this.userStore.entities());
+    });
+    effect(() => {
+      console.log('WeeklyGoal', this.weeklyGoalStore.entities());
+    });
+
   }
 
-  ngOnInit() { 
-    // --------------- EVENT HANDLING ----------------------
-
-    // --------------- LOAD DATA ---------------------------
-    // Once everything is set up, load the data for the role.
-  }
-
-  ngOnDestroy() {
-    // Unsubscribe subscriptions.
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
-
-    // Unsubscribe from firebase connection from load and free up memoized selector values.
-    this.store.dispatch(new Cleanup(this.containerId));
-    this.selectors.cleanup(this.containerId);
+  ngOnInit(): void { 
+    this.quarterlyGoalStore.load([], {});
   }
 }

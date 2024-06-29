@@ -1,21 +1,26 @@
+import { Timestamp } from '@angular/fire/firestore';
+
+/** user data */
 export interface User {
   __id: string;
+  _createdAt?: Timestamp;
+  _updatedAt?: Timestamp;
+  _deleted?: boolean;
   name: string;
   email: string;
   photoURL?: string;
-  onboardingState: OnboardingState;
+  tokens?: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [index: string]: any;
+  };
 }
 
-export enum OnboardingState {
-  WELCOME = 1,
-  LONG_TERM_GOALS = 2,
-  QUARTER_PROMPT = 3,
-  QUARTER_GOALS = 4,
-  WEEKLY_PROMPT = 5,
-  WEEKLY_GOALS = 6,
-  HASHTAG_PROMPT = 7,
-  HASHTAGS = 8,
-  SCHEDULING_PROMPT = 9,
-  SCHEDULING = 10,
-  COMPLETE = 11,
+export enum AccessState {
+  CONSENT = '01 - consent', // on consent form
+  SUBMIT_INTEREST = '02 - submit interest', // short form on login with basic interest
+  SUBMIT_DETAILED = '03 - submit detailed', // longer form on richer context
+  WAITING = '04 - waiting', // on waitlist for early access
+  // PLACEHOLDER: uncomment below for app-specific walkthrough page
+  // WALKTHROUGH = '05 - walkthrough', // on app specific walkthrough page
+  DONE = 'done', // finished with the entire flow
 }
