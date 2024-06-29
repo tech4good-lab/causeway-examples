@@ -2,6 +2,7 @@ import { Type, WritableSignal, inject, Injectable, Injector } from '@angular/cor
 import { QueryParams, QueryOptions, AnyEntity } from './app.model';
 import { withEntities, setAllEntities, removeEntity, updateEntity, setEntity, removeEntities, setEntities } from '@ngrx/signals/entities';
 import { signalStore, patchState, withState, withMethods, signalStoreFeature } from '@ngrx/signals';
+import { EntityIdKey } from '@ngrx/signals/entities/src/models';
 import { CachedListenersService } from '../firebase/cached-listeners.service';
 import { FirebaseService } from '../firebase/firebase.service';
 import { Timestamp } from '@angular/fire/firestore';
@@ -24,6 +25,20 @@ export function withEntitiesAndSelectMethods<S extends AnyEntity>() {
       selectEntities(queryParams: QueryParams, queryOptions: QueryOptions): S[] {
         return selectEntities<S>(store.entityMap(), queryParams, queryOptions);
       },
+    })),
+  );
+}
+
+export function withEntitiesForMockDB<S extends AnyEntity>() {
+  return signalStoreFeature(
+    withEntitiesAndSelectMethods<S>(),
+    withMethods((store) => ({
+      add(entity: S) {
+        patchState(store, setEntity<S>(entity, { idKey: '__id' as EntityIdKey<S> }));
+      },
+      update(id: string, changes: Partial<S>) {
+        patchState(store, updateEntity({ id, changes }));
+      }
     })),
   );
 }

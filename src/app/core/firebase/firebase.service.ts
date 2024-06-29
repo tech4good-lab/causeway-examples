@@ -88,7 +88,7 @@ export class FirebaseService {
         return entityMap;
       }),
       // compare current with prior including the first
-      startWith(undefined),
+      startWith({}),
       pairwise(),
       // get the changedEntities
       map(([prevEntities, currEntities]) => {

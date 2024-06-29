@@ -15,9 +15,6 @@ export class AppComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    // Load auth into store    
-    this.authStore.loadAuth();
-
     this.mockDB.initDB();
   }
 }

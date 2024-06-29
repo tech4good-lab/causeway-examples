@@ -7,12 +7,12 @@ import { QuarterlyGoal } from '../store/quarterly-goal/quarterly-goal.model';
 import { WeeklyGoal } from '../store/weekly-goal/weekly-goal.model';
 import { Reflection } from '../store/reflection/reflection.model';
 import { QueryParams, QueryOptions, AnyEntity } from '../store/app.model';
-import { withEntitiesAndSelectMethods } from '../store/app.store';
+import { withEntitiesForMockDB } from '../store/app.store';
 import { withEntities, setAllEntities, removeEntity, updateEntity, setEntity, removeEntities, setEntities } from '@ngrx/signals/entities';
 import { signalStore, patchState, withState, withMethods, signalStoreFeature } from '@ngrx/signals';
 
 // AUTH STORE
-const USER_1: User = {
+export const USER_1: User = {
   __id: 'test-user',
   name: 'Test User',
   email: 'test@sample.com',
@@ -35,32 +35,32 @@ export const AuthDB = signalStore(
 // ENTITIES STORE
 export const HashtagDB = signalStore(
   { providedIn: 'root' },
-  withEntitiesAndSelectMethods<Hashtag>(),
+  withEntitiesForMockDB<Hashtag>(),
 );
 
 export const LongTermGoalDB = signalStore(
   { providedIn: 'root' },
-  withEntitiesAndSelectMethods<LongTermGoal>(),
+  withEntitiesForMockDB<LongTermGoal>(),
 );
 
 export const QuarterlyGoalDB = signalStore(
   { providedIn: 'root' },
-  withEntitiesAndSelectMethods<QuarterlyGoal>(),
+  withEntitiesForMockDB<QuarterlyGoal>(),
 );
 
 export const ReflectionDB = signalStore(
   { providedIn: 'root' },
-  withEntitiesAndSelectMethods<Reflection>(),
+  withEntitiesForMockDB<Reflection>(),
 );
 
 export const UserDB = signalStore(
   { providedIn: 'root' },
-  withEntitiesAndSelectMethods<User>(),
+  withEntitiesForMockDB<User>(),
 );
 
 export const WeeklyGoalDB = signalStore(
   { providedIn: 'root' },
-  withEntitiesAndSelectMethods<WeeklyGoal>(),
+  withEntitiesForMockDB<WeeklyGoal>(),
 );
 
 @Injectable({
@@ -188,7 +188,7 @@ export class MockDBService {
     patchState(this.hashtagDB, setAllEntities([
       {
         __id: 'ht1',
-        name: '#coverletter',
+        name: 'coverletter',
         color: '#EE8B72',
         _createdAt: Timestamp.now(),
         _updatedAt: Timestamp.now(),
@@ -196,7 +196,7 @@ export class MockDBService {
       },
       {
         __id: 'ht2',
-        name: '#apply',
+        name: 'apply',
         color: '#2DBDB1',
         _createdAt: Timestamp.now(),
         _updatedAt: Timestamp.now(),
@@ -204,7 +204,7 @@ export class MockDBService {
       },
       {
         __id: 'ht3',
-        name: '#interview',
+        name: 'interview',
         color: '#FFB987',
         _createdAt: Timestamp.now(),
         _updatedAt: Timestamp.now(),
