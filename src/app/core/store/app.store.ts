@@ -2,7 +2,7 @@ import { Type, WritableSignal, inject, Injectable, Injector } from '@angular/cor
 import { QueryParams, QueryOptions, AnyEntity } from './app.model';
 import { withEntities, setAllEntities, removeEntity, updateEntity, setEntity, removeEntities, setEntities } from '@ngrx/signals/entities';
 import { signalStore, patchState, withState, withMethods, signalStoreFeature } from '@ngrx/signals';
-import { EntityIdKey } from '@ngrx/signals/entities/src/models';
+import { EntityIdKey, EntityChanges } from '@ngrx/signals/entities/src/models';
 import { CachedListenersService } from '../firebase/cached-listeners.service';
 import { FirebaseService } from '../firebase/firebase.service';
 import { Timestamp } from '@angular/fire/firestore';
@@ -24,6 +24,370 @@ export function withEntitiesAndSelectMethods<S extends AnyEntity>() {
       },
       selectEntities(queryParams: QueryParams, queryOptions: QueryOptions): S[] {
         return selectEntities<S>(store.entityMap(), queryParams, queryOptions);
+      },
+    })),
+  );
+}
+
+export function withEntitiesAndDBMethods<S extends AnyEntity>(collectionName: string) {
+  return signalStoreFeature(
+    withEntitiesAndSelectMethods<S>(),
+    withMethods((store, cachedLoads = inject(CachedListenersService), db = inject(FirebaseService)) => ({
+      // streaming tries to reduce redundant loads through the following:
+      // - caching listeners and reusing them with a 5-second delay after moving to a new container before unsubscribing
+      // additionally, it has the following constraints:
+      // - nested loadQueries are only loaded, not streamed, to prevent huge numbers of listeners.
+      // - nested loadQueries can only be made based on the id of retrieved entities to ensure we only need to replay loads/adds
+      // - containers pass in an id for loads, then onDestroy, they call cachedListeners.disconnect(id)
+      async stream(
+        queryParams: QueryParams,
+        queryOptions: QueryOptions,
+        injector,
+        streamQueries?: (entity: S) => EntityStreamQuery<AnyEntity>[],
+        options?: {
+          loading?: WritableSignal<boolean>, // set to true on start, set to false once all are complete
+        },
+      ) {
+        try {
+          // start loading icon if available
+          options?.loading?.set(true);
+
+          await cachedLoads.processStreamQuery(collectionName, store, queryParams, queryOptions, injector, streamQueries, options);
+        } catch (e) {
+          console.error(e);
+
+          // stop loading icon. when no error, loading icon is stopped
+          // upon the initial payload coming through the stream and the
+          // loadQueries being processed
+          options?.loading?.set(false);
+          throw e;
+        }
+      },
+      // loading tries to reduce redundant loads through the following:
+      // - below only applies when there are no queryOptions
+      // - only loads (not deleted) entities since the last time this query was made and when there is not already an active stream for that
+      // - delete entities since the last load where _deleted is true and when there is not already an active stream for that (which would handle deletions too)
+      // - to calculate loadQueries, use the entities within the store (to get both the deltas and the things already loaded)
+      async load(
+        queryParams: QueryParams,
+        queryOptions: QueryOptions,
+        loadQueries?: (entity: S) => EntityLoadQuery<AnyEntity>[],
+        options?: {
+          loading?: WritableSignal<boolean>,
+        },
+      ) {
+        try {
+          // start loading icon if available
+          options?.loading?.set(true);
+
+          // only load if there is not already a listener for the same query
+          if (!cachedLoads.isStreamForQuery(collectionName, queryParams, queryOptions)) {
+            // get the last load time and next load time
+            const lastLoadTime = cachedLoads.getLastLoadTime(collectionName, queryParams, queryOptions);
+            const newLoadTime = Timestamp.now().toMillis();
+
+            // load entities since last load that are not deleted
+            // note that we always load all entities if there exist queryOptions since adding
+            // the _updatedAt filter will change queries with limit
+            let queryParamsWithTime;
+            if (lastLoadTime === -1 || (queryOptions && Object.keys(queryOptions).length > 0)) {
+              queryParamsWithTime = [...queryParams, ['_deleted', '==', false]];
+            } else {
+              queryParamsWithTime = [
+                ...queryParams,
+                ['_updatedAt', '>', Timestamp.fromMillis(lastLoadTime)],
+                ['_deleted', '==', false],
+              ];
+            }
+
+            // get entities that have been added or updated since last load
+            const entitiesDelta: S[] = await db.getEntities(
+              collectionName,
+              queryParamsWithTime,
+              queryOptions,
+            );
+            patchState(store, setEntities<S>(entitiesDelta, { idKey: '__id' as EntityIdKey<S> }));
+
+            // delete any new deleted entities
+            if (lastLoadTime === -1 || (queryOptions && Object.keys(queryOptions).length > 0)) {
+              const entitiesDeletedDelta: S[] = await db.getEntities(
+                collectionName,
+                [...queryParams, ['_deleted', '==', true]],
+                queryOptions,
+              );
+              patchState(store, removeEntities(
+                entitiesDeletedDelta.map((e) => e.__id),
+              ));
+            } else {
+              const entitiesDeletedDelta: S[] = await db.getEntities(
+                collectionName,
+                [...queryParams,
+                  ['_updatedAt', '>', Timestamp.fromMillis(lastLoadTime)],
+                  ['_deleted', '==', true]],
+                queryOptions,
+              );
+              patchState(store, removeEntities(
+                entitiesDeletedDelta.map((e) => e.__id),
+              ));
+            }
+
+            // save a new lastLoadTime for this query
+            cachedLoads.setLastLoadTime(collectionName, queryParams, queryOptions, newLoadTime);
+          }
+
+          if (loadQueries) {
+            // retrieve entities from store for loading queries
+            // note we cannot simply use entities from load since it may not be all entities (only those for which updatedAt > lastLoadTime)
+            const allQueriedEntities = store.selectEntities(queryParams, queryOptions);
+            await processLoadQueries<S>(allQueriedEntities, loadQueries);
+          }
+        } catch (e) {
+          console.error(e);
+          throw e;
+        } finally {
+          // stop loading icon
+          options?.loading?.set(false);
+        }
+      },
+      async count(
+        queryParams: QueryParams,
+        queryOptions: QueryOptions,
+        options?: {
+          loading?: WritableSignal<boolean>,
+        },
+      ): Promise<number> {
+        try {
+          // start loading icon if available
+          options?.loading?.set(true);
+
+          const queryParamsNotDeleted: QueryParams = [...queryParams, ['_deleted', '==', false]];
+          return await db.count(collectionName, queryParamsNotDeleted, queryOptions);
+        } catch (e) {
+          console.error(e);
+          throw e;
+        } finally {
+          // stop loading icon
+          options?.loading?.set(false);
+        }
+      },
+      async aggregate<T extends { [k: string]: number }>(
+        queryParams: QueryParams,
+        queryOptions: QueryOptions,
+        aggregateParams: { [K in keyof T]: [string] | [string, string] },
+        options?: {
+          loading?: WritableSignal<boolean>,
+        },
+      ): Promise<{ [K in keyof T]: number }> {
+        try {
+          // start loading icon if available
+          options?.loading?.set(true);
+
+          const queryParamsNotDeleted: QueryParams = [...queryParams, ['_deleted', '==', false]];
+          return await db.aggregate<T>(
+            collectionName, queryParamsNotDeleted, queryOptions, aggregateParams,
+          );
+        } catch (e) {
+          console.error(e);
+          throw e;
+        } finally {
+          // stop loading icon
+          options?.loading?.set(false);
+        }
+      },
+      async increment(id: string, field: string, delta: number, options?: {
+        loading?: WritableSignal<boolean>,
+        optimistic?: boolean
+      }) {
+        // get current value
+        const currEntityValue = store.entityMap()[id];
+        const changes = {};
+        changes[field] = (currEntityValue[field] || 0) + delta;
+        changes['_updatedAt'] = Timestamp.now();
+
+        if (options?.optimistic) {
+          try {
+            // optimistically set then query backend
+            patchState(store, updateEntity({
+              id,
+              changes: Object.assign({}, changes, {
+                _updatedAt: Timestamp.now(),
+              }) as EntityChanges<S>,
+            }));
+            await db.incrementEntityField(collectionName, id, field, delta);
+          } catch (e) {
+            // undo ngrx store value
+            if (currEntityValue) {
+              patchState(store, setEntity<S>(currEntityValue, { idKey: '__id' as EntityIdKey<S> }));
+            } else {
+              patchState(store, removeEntity(id));
+            }
+            console.error(e);
+            throw e;
+          }
+        } else {
+          try {
+            // start loading icon
+            options?.loading?.set(true);
+
+            // update entity
+            await db.incrementEntityField(collectionName, id, field, delta);
+            patchState(store, updateEntity({
+              id,
+              changes: Object.assign({}, changes, {
+                _updatedAt: Timestamp.now(),
+              }) as EntityChanges<S>,
+            }));
+          } catch (e) {
+            console.error(e);
+            throw e;
+          } finally {
+            // stop loading icon
+            options?.loading?.set(false);
+          }
+        }
+      },
+      async add(entityOpId: S | Omit<S, '__id'>, options?: {
+        loading?: WritableSignal<boolean>,
+        optimistic?: boolean
+      }) {
+        // Create an __id if one was not provided
+        const entity: S = Object.assign({}, entityOpId, {
+          __id: entityOpId['__id'] || db.createId(),
+        }) as S;
+
+        if (options?.optimistic) {
+          // get current value for resetting on error
+          const currEntityValue = store.entityMap()[entity.__id];
+          try {
+            // optimistically set then query backend
+            patchState(store, setEntity<S>(
+              Object.assign({}, entity, {
+                _updatedAt: Timestamp.now(),
+                _createdAt: Timestamp.now(),
+                _deleted: false,
+              }),
+              { idKey: '__id' as EntityIdKey<S> },
+            ));
+            await db.addEntity(collectionName, entity);
+          } catch (e) {
+            // undo ngrx store value
+            if (currEntityValue) {
+              patchState(store, setEntity<S>(currEntityValue, { idKey: '__id' as EntityIdKey<S> }));
+            } else {
+              patchState(store, removeEntity(entity.__id));
+            }
+            console.error(e);
+            throw e;
+          }
+        } else {
+          try {
+            // start loading icon
+            options?.loading?.set(true);
+
+            // add entity
+            await db.addEntity(collectionName, entity);
+            patchState(store, setEntity<S>(
+              Object.assign({}, entity, {
+                _updatedAt: Timestamp.now(),
+                _createdAt: Timestamp.now(),
+                _deleted: false,
+              }),
+              { idKey: '__id' as EntityIdKey<S> },
+            ));
+          } catch (e) {
+            console.error(e);
+            throw e;
+          } finally {
+            // stop loading icon
+            options?.loading?.set(false);
+          }
+        }
+      },
+      async update(id: string, changes: Partial<S>, options?: {
+        loading?: WritableSignal<boolean>,
+        optimistic?: boolean
+      }) {
+        if (options?.optimistic) {
+          // get current value for resetting on error
+          const currEntityValue = store.entityMap()[id];
+          try {
+            // optimistically set then query backend
+            patchState(store, updateEntity({
+              id,
+              changes: Object.assign({}, changes, {
+                _updatedAt: Timestamp.now(),
+              }) as EntityChanges<S>,
+            }));
+            await db.updateEntity(collectionName, id, changes);
+          } catch (e) {
+            // undo ngrx store value
+            if (currEntityValue) {
+              patchState(store, setEntity<S>(currEntityValue, { idKey: '__id' as EntityIdKey<S> }));
+            } else {
+              patchState(store, removeEntity(id));
+            }
+            console.error(e);
+            throw e;
+          }
+        } else {
+          try {
+            // start loading icon
+            options?.loading?.set(true);
+
+            // update entity
+            await db.updateEntity(collectionName, id, changes);
+            patchState(store, updateEntity({
+              id,
+              changes: Object.assign({}, changes, {
+                _updatedAt: Timestamp.now(),
+              }) as EntityChanges<S>,
+            }));
+          } catch (e) {
+            console.error(e);
+            throw e;
+          } finally {
+            // stop loading icon
+            options?.loading?.set(false);
+          }
+        }
+      },
+      async remove(id: string, options?: {
+        loading?: WritableSignal<boolean>,
+        optimistic?: boolean
+      }) {
+        if (options?.optimistic) {
+          // get current value for resetting on error
+          const currEntityValue = store.entityMap()[id];
+          try {
+            // optimistically set then query backend
+            patchState(store, removeEntity(id));
+
+            // delete entity from DB (soft delete)
+            await db.removeEntity(collectionName, id);
+          } catch (e) {
+            // undo ngrx store value
+            if (currEntityValue) {
+              patchState(store, setEntity<S>(currEntityValue, { idKey: '__id' as EntityIdKey<S> }));
+            }
+            console.error(e);
+            throw e;
+          }
+        } else {
+          try {
+            // start loading icon
+            options?.loading?.set(true);
+
+            // soft deletion to support detecting changes (deltas) from a timestamp
+            await db.removeEntity(collectionName, id);
+            patchState(store, removeEntity(id));
+          } catch (e) {
+            console.error(e);
+            throw e;
+          } finally {
+            // stop loading icon
+            options?.loading?.set(false);
+          }
+        }
       },
     })),
   );
