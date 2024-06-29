@@ -1,3 +1,43 @@
-<div class="modal">
-  modal works!
+<div>
+  <mat-dialog-content class="quarterly-goals-modal-root">
+    <header class="header">
+      <div class="top-row">
+        <h2>Quarterly Goals</h2>
+        <button mat-icon-button class="close-button" mat-dialog-close>
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      <time class="date-range"><b>{{ getQuarterAndYear() }}</b></time>
+    </header>
+    <form [formGroup]="quarterGoalsForm" (ngSubmit)="saveGoals()">
+      <section class="goal-list" cdkDropList (cdkDropListDropped)="drop($event)">
+        <div class="goal-container" formArrayName="allGoals">
+          <article *ngFor="let goal of allGoals.controls; let i=index" class="goal-item" cdkDrag>
+            <div class="goals-box" [formGroupName]="i">
+              <mat-icon cdkDragHandle>drag_indicator</mat-icon>
+              <!-- field set is used to disable these fields when a goal is set to be deleted -->
+              <fieldset class="field-wrapper" [disabled]="this.allGoals.at(i).value._deleted">
+                <mat-form-field class="goal-input">
+                  <input matInput placeholder="Enter your goal..." formControlName="text" />
+                </mat-form-field>
+                <mat-form-field  class="goal-dropdown">
+                  <span matTextPrefix>#</span>
+                  <input class="bleh" matInput placeholder="{{ quarterGoalsForm.get(['allGoals', i, 'hashtagName']).value }}" formControlName="hashtagName" />
+                </mat-form-field>
+              </fieldset>
+              <input id="trash-{{ i }}" type="checkbox" [checked]="quarterGoalsForm.get(['allGoals', i, '_deleted'])" formControlName="_deleted">
+              <label for="trash-{{ i }}" class="trash-label" matTooltip="{{this.allGoals.at(i).value._deleted ? 'Undelete this goal?' : 'Delete this goal?'}}">
+                <mat-icon class="delete" aria-hidden="false" aria-label="trash icon" fontIcon="delete"></mat-icon>
+                <mat-icon class="restore" aria-hidden="false" aria-label="trash icon" fontIcon="restore_from_trash"></mat-icon>
+              </label>
+            </div>
+          </article>
+        </div>
+      </section>
+      <div class="add-goal" (click)="addGoalToForm(null)">+ Add quarter goal</div>
+      <div class="container-add">
+        <button class="add-button" type="submit" [disabled]="!quarterGoalsForm.valid">Save</button>
+      </div>
+    </form>
+  </mat-dialog-content>
 </div>

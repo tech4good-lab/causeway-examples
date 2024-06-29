@@ -21,6 +21,7 @@ export interface QuarterlyGoalInForm {
   text: string;
   hashtagName: string;
   // Just available for saving to DB later
+  _deleted: boolean;
   __quarterlyGoalId?: string;
   __hashtagId?: string;
   originalOrder?: number;
@@ -33,6 +34,7 @@ export interface weeklyGoalInForm {
   text: string;
   __quarterlyGoalId: string; // changed from hashtagId
   // Just available for saving to DB later
+  _deleted: boolean;
   originalText?: string;
   __weeklyGoalId?: string;
   originalOrder?: number;
