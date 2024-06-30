@@ -12,17 +12,25 @@ export function withEntitiesAndSelectMethods<S extends AnyEntity>() {
     withEntities<S>(),
     withMethods((store) => ({
       selectEntity(id: string): S {
-        return store.entityMap()[id];
+        const result = store.entityMap()[id];
+
+        if (result && !result['_deleted']) {
+          return result;
+        } else {
+          return null;
+        }
       },
       selectFirst(queryParams: QueryParams, queryOptions: QueryOptions): S {
+        // Note: selectEntities already filters out _deleted
         const entities = selectEntities<S>(store.entityMap(), queryParams, queryOptions);
         if (entities && entities.length > 0) {
           return entities[0];
         } else {
-          return undefined;
+          return null;
         }
       },
       selectEntities(queryParams: QueryParams, queryOptions: QueryOptions): S[] {
+        // Note: selectEntities already filters out _deleted
         return selectEntities<S>(store.entityMap(), queryParams, queryOptions);
       },
     })),
@@ -408,7 +416,10 @@ export function withEntitiesForMockDB<S extends AnyEntity>() {
 }
 
 /**
- * Select entities from store given the entityMap and queries
+ * Select entities from store given the entityMap and queries.
+ * Filters out any entities that have '_deleted' === true. In general
+ * this shouldn't matter, but in case someone intentionally sets
+ * the _deleted parameter, this adds more robustness.
  * Note: firestore supports setting and querying for null, but not
  * undefined. We filter out cases where the value is undefined
  * to protect against cases when people are doing a nested query
@@ -428,18 +439,16 @@ export function selectEntities<T>(entityMap: Record<string, T>, queryParams: Que
     .map((q) => [q[0], q[1], q[2].filter((v) => v !== undefined)])
     .filter((q) => q[2].length > 0);
 
-  if (uniqSelectEqIds.length === 1 && entityMap[uniqSelectEqIds[0]]) {
+  if (uniqSelectEqIds.length === 1 && entityMap[uniqSelectEqIds[0]] && !entityMap[uniqSelectEqIds[0]]['_deleted']) {
     // If there is exactly one '__id', we can start with that to filter
-    if (entityMap[uniqSelectEqIds[0]]) {
-      filteredEntities.push(entityMap[uniqSelectEqIds[0]]);
-    }
+    filteredEntities.push(entityMap[uniqSelectEqIds[0]]);
   } else if (uniqSelectEqIds.length > 1) {
     // If there are more than one select id ==, then there cannot be any matches
     return [];
   } else if (selectIdInQueries.length > 0) {
     // If there is at least one 'in' query, start with that.
     const firstInIds = selectIdInQueries[0][2];
-    filteredEntities = firstInIds.map((id) => entityMap[id]).filter((e) => e !== undefined);
+    filteredEntities = firstInIds.map((id) => entityMap[id]).filter((e) => e && !e['_deleted']);
 
     // Then apply remaining 'in' filters. See general filter section
     // for comments since this is just copied from that.
@@ -453,7 +462,9 @@ export function selectEntities<T>(entityMap: Record<string, T>, queryParams: Que
     }
   } else {
     // Otherwise, start with the full list and filter further.
-    filteredEntities = Object.keys(entityMap).map((id) => entityMap[id]);
+    filteredEntities = Object.keys(entityMap)
+      .map((id) => entityMap[id])
+      .filter((e) => e && !e['_deleted']);
   }
 
   // APPLY REMAINING FILTERS
@@ -560,7 +571,12 @@ export function selectEntities<T>(entityMap: Record<string, T>, queryParams: Que
   return filteredEntities;
 }
 
-/** Select entities from store given the entityMap and queries */
+/** 
+ * Check whether the entity satisfies the query results.
+ * We use this to double-check whether a 'removed' change was truly
+ * removed from the backend or whether it just doesn't match
+ * the query anymore.
+ */
 export function entityInQueryResults<T>(e: T, queryParams: QueryParams, queryOptions: QueryOptions): boolean {
   if (queryParams) {
     // Looks for the first failed filter. If there exists any,
