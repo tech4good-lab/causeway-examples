@@ -1,6 +1,13 @@
 import { QuarterlyGoal } from 'src/app/core/store/quarterly-goal/quarterly-goal.model';
 import { Hashtag } from '../../core/store/hashtag/hashtag.model';
 import { WeeklyGoal } from '../../core/store/weekly-goal/weekly-goal.model';
+import { LongTermGoal } from 'src/app/core/store/long-term-goal/long-term-goal.model';
+
+export interface LongTermGoalInForm {
+  __id: string;
+  oneYearText: string;
+  fiveYearText: string;
+}
 
 export interface WeeklyGoalData extends WeeklyGoal {
   hashtag: Hashtag;

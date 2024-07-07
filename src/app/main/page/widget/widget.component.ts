@@ -15,6 +15,8 @@ import { QuarterlyGoalData } from '../page.model';
 import { QuarterlyGoal } from 'src/app/core/store/quarterly-goal/quarterly-goal.model';
 import { ModalComponent } from '../modal/modal.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { LoadLongTermGoal, StreamLongTermGoal, LongTermGoalStore } from 'src/app/core/store/long-term-goal/long-term-goal.store';
+import { LongTermGoal } from 'src/app/core/store/long-term-goal/long-term-goal.model';
 
 @Component({
   selector: 'app-widget',
@@ -25,61 +27,68 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 })
 export class WidgetComponent implements OnInit {
   readonly authStore = inject(AuthStore);
-  readonly hashtagStore = inject(HashtagStore);
-  readonly quarterlyGoalStore = inject(QuarterlyGoalStore);
-  readonly weeklyGoalStore = inject(WeeklyGoalStore);
+  // readonly hashtagStore = inject(HashtagStore);
+  // readonly quarterlyGoalStore = inject(QuarterlyGoalStore);
+  // readonly weeklyGoalStore = inject(WeeklyGoalStore);
+  readonly longTermStore = inject(LongTermGoalStore);
 
   // --------------- INPUTS AND OUTPUTS ------------------
 
   /** The current signed in user. */
   currentUser: Signal<User> = this.authStore.user;
+
+  longTermGoals: Signal<LongTermGoal[]> = computed(() => {
+    return this.longTermStore.selectEntities([
+      ['__userId', '==', this.currentUser().__id]
+    ], { orderBy: 'order' });
+  });
   
-  /** Completed quarterly goals. */
-  completedQuarterlyGoals: Signal<QuarterlyGoalData[]> = computed(() => {
-    const quarterDates = this.getStartAndEndDate();
-    const quarterStartDate = quarterDates[0];
-    const quarterEndDate = quarterDates[1];
+  // /** Completed quarterly goals. */
+  // completedQuarterlyGoals: Signal<QuarterlyGoalData[]> = computed(() => {
+  //   const quarterDates = this.getStartAndEndDate();
+  //   const quarterStartDate = quarterDates[0];
+  //   const quarterEndDate = quarterDates[1];
 
-    const completedGoals = this.quarterlyGoalStore.selectEntities([
-      ['__userId', '==', this.currentUser().__id],
-      ['completed', '==', true],
-      ['endDate', '>=', Timestamp.fromDate(quarterStartDate)],
-    ], { orderBy: 'order' });
+  //   const completedGoals = this.quarterlyGoalStore.selectEntities([
+  //     ['__userId', '==', this.currentUser().__id],
+  //     ['completed', '==', true],
+  //     ['endDate', '>=', Timestamp.fromDate(quarterStartDate)],
+  //   ], { orderBy: 'order' });
 
-    return completedGoals.map((goal) => {
-      return Object.assign({}, goal, {
-        hashtag: this.hashtagStore.selectEntity(goal.__hashtagId),
-        weeklyGoalsTotal: this.weeklyGoalStore.selectEntities([
-          ['__quarterlyGoalId', '==', goal.__id],
-        ], {}).length,
-        weeklyGoalsComplete: this.weeklyGoalStore.selectEntities([
-          ['__quarterlyGoalId', '==', goal.__id],
-          ['completed', '==', true],
-        ], {}).length,
-      });
-    });
-  });
+  //   return completedGoals.map((goal) => {
+  //     return Object.assign({}, goal, {
+  //       hashtag: this.hashtagStore.selectEntity(goal.__hashtagId),
+  //       weeklyGoalsTotal: this.weeklyGoalStore.selectEntities([
+  //         ['__quarterlyGoalId', '==', goal.__id],
+  //       ], {}).length,
+  //       weeklyGoalsComplete: this.weeklyGoalStore.selectEntities([
+  //         ['__quarterlyGoalId', '==', goal.__id],
+  //         ['completed', '==', true],
+  //       ], {}).length,
+  //     });
+  //   });
+  // });
 
-  /** Incomplete quarterly goals. */
-  incompleteQuarterlyGoals: Signal<QuarterlyGoalData[]> = computed(() => {
-    const incompleteGoals = this.quarterlyGoalStore.selectEntities([
-      ['__userId', '==', this.currentUser().__id],
-      ['completed', '==', false],
-    ], { orderBy: 'order' });
+  // /** Incomplete quarterly goals. */
+  // incompleteQuarterlyGoals: Signal<QuarterlyGoalData[]> = computed(() => {
+  //   const incompleteGoals = this.quarterlyGoalStore.selectEntities([
+  //     ['__userId', '==', this.currentUser().__id],
+  //     ['completed', '==', false],
+  //   ], { orderBy: 'order' });
 
-    return incompleteGoals.map((goal) => {
-      return Object.assign({}, goal, {
-        hashtag: this.hashtagStore.selectEntity(goal.__hashtagId),
-        weeklyGoalsTotal: this.weeklyGoalStore.selectEntities([
-          ['__quarterlyGoalId', '==', goal.__id],
-        ], {}).length,
-        weeklyGoalsComplete: this.weeklyGoalStore.selectEntities([
-          ['__quarterlyGoalId', '==', goal.__id],
-          ['completed', '==', true],
-        ], {}).length,
-      });
-    });
-  });
+  //   return incompleteGoals.map((goal) => {
+  //     return Object.assign({}, goal, {
+  //       hashtag: this.hashtagStore.selectEntity(goal.__hashtagId),
+  //       weeklyGoalsTotal: this.weeklyGoalStore.selectEntities([
+  //         ['__quarterlyGoalId', '==', goal.__id],
+  //       ], {}).length,
+  //       weeklyGoalsComplete: this.weeklyGoalStore.selectEntities([
+  //         ['__quarterlyGoalId', '==', goal.__id],
+  //         ['completed', '==', true],
+  //       ], {}).length,
+  //     });
+  //   });
+  // });
 
   // --------------- LOCAL UI STATE ----------------------
 
@@ -93,7 +102,7 @@ export class WidgetComponent implements OnInit {
   // --------------- COMPUTED DATA -----------------------
 
   /** Helper function for calculating quarter name and year */
-  getQuarterAndYear() {
+  /**getQuarterAndYear() {
     const quarter = new Date();
     const quarterYear = new Date(new Date().setFullYear(quarter.getFullYear()));
 
@@ -117,12 +126,12 @@ export class WidgetComponent implements OnInit {
       default:
         return 'Invalid Month';
     }
-  }
+  }*/
 
   /** Helper function for calculating the start and end of a quarter */
   // TODO: the current quarterEndDate will miss things that are a few hours/minutes/days past
   // the beginning of that date, e.g. March 31st noon will not be counted in Jan-Mar quarter
-  getStartAndEndDate() {
+  /*getStartAndEndDate() {
     const today = new Date();
     const currentQuarter = Math.floor((today.getMonth() / 3)) + 1; // 1 = Q1, 2 = Q2, 3 = Q3, 4 = Q4
     let quarterStartDate: Date;
@@ -149,18 +158,18 @@ export class WidgetComponent implements OnInit {
         throw new Error('Invalid quarter number');
     }
     return [quarterStartDate, quarterEndDate];
-  }
+  }*/
 
   // --------------- EVENT HANDLING ----------------------
 
   /** Open add or edit goals modal. */
-  openModal() {
+  /*openModal() {
     this.dialogRef = this.dialog.open(ModalComponent, {
       width: '65%',
       height: '90%',
       position: { bottom: '0' },
       data: {
-        incompleteGoals: this.incompleteQuarterlyGoals(),
+        //incompleteGoals: this.incompleteQuarterlyGoals(),
         updateQuarterlyGoals: async (quarterGoalsFormArray) => {
           try {
             await Promise.all(quarterGoalsFormArray.controls.map(async (control, i) => {
@@ -238,10 +247,10 @@ export class WidgetComponent implements OnInit {
         },
       },
     });
-  }
+  }*/
 
   /** Check or uncheck a goal. */
-  async checkGoal(goal: QuarterlyGoal) {
+  /**async checkGoal(goal: QuarterlyGoal) {
     try {
       await this.quarterlyGoalStore.update(goal.__id, {
         completed: !goal.completed,
@@ -261,7 +270,7 @@ export class WidgetComponent implements OnInit {
       console.error(e);
       this.snackBar.open('Failed to update goal', '', { duration: 3000 });
     }
-  }
+  }*/
 
   // --------------- OTHER -------------------------------
 
@@ -276,9 +285,13 @@ export class WidgetComponent implements OnInit {
 
   ngOnInit(): void {
     // Load entities to store
-    this.quarterlyGoalStore.load([['__userId', '==', this.currentUser().__id]], {}, (qg) => [
+    /*this.quarterlyGoalStore.load([['__userId', '==', this.currentUser().__id]], {}, (qg) => [
       LoadHashtag.create(this.hashtagStore, [['__id', '==', qg.__hashtagId]], {}),
       LoadWeeklyGoal.create(this.weeklyGoalStore, [['__quarterlyGoalId', '==', qg.__id]], {}),
+    ]);*/
+    this.longTermStore.load([['__userId', '==', this.currentUser().__id]], {}, (ltg) => [
+      LoadLongTermGoal.create(this.longTermStore, [['oneYear', '==', ltg.oneYear]], {}),
+      LoadLongTermGoal.create(this.longTermStore, [['fiveYear', '==', ltg.fiveYear]], {}),
     ]);
   }
 }
