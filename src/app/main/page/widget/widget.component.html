@@ -64,39 +64,21 @@
       <div class="add-goal">+ Add a quarter goal</div>
     </button>
   </footer> -->
-  <div class="long-term-goals">
-    hello
-
-
-    @for (goal of longTermGoals(); track goal.__id) {
-      <!-- <li class="long-term-goal" [@goalState]> -->
-      
-        <div class="goal-details">
-
-          <p>hello2</p>
-          <div class="goal-title">{{ goal.fiveYear }}</div>
-
-        </div>
-      <!-- </li> -->
-
-      <p>hello3</p>
-    }
-
-    <p>hello4</p>
-
-    <!-- 
-    <div *ngIf="longTermGoals() as goals">
-      <div *ngFor="let goal of goals">
-        <div>
-          <h3>1 year</h3>
-          <p>{{ goal }}</p>
-        </div>
-        <div>
-          <h3>5 year</h3>
-          <p>{{ goal.fiveYear }}</p>
-        </div>
-      </div>
-    </div>
-  </div> -->
+    <section class="goal-list">
+      <ul class="goal-content">
+        <li class="longterm-goal">
+            <div class="goal-name">1 year</div>
+            <div class="goal-detail">
+                {{longTermGoals()?.oneYear}}
+            </div>
+        </li>
+        <li class="longterm-goal">
+            <div class="goal-name">5 year</div>
+            <div class="goal-detail">
+                {{longTermGoals()?.fiveYear}}
+            </div>
+        </li>
+      </ul>
+    </section>
 
 </div>

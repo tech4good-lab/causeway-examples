@@ -40,3 +40,11 @@ export interface weeklyGoalInForm {
   originalOrder?: number;
   originalQuarterlyGoalId?: string;
 }
+
+export interface longGoalInForm {
+  oneYear: string,
+  fiveYear: string,
+  originalOneYear?: string,
+  originalFiveYear?: string,
+  __longTermGoalId?: string,
+}

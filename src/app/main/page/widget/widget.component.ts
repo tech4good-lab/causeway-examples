@@ -33,7 +33,7 @@ import { LongTermGoalStore, LoadLongTermGoal, StreamLongTermGoal } from 'src/app
 export class WidgetComponent implements OnInit {
   readonly authStore = inject(AuthStore);
   readonly hashtagStore = inject(HashtagStore);
-  readonly longTermGoal = inject(LongTermGoalStore);
+  readonly longTermGoalStore = inject(LongTermGoalStore);
   
   // readonly quarterlyGoalStore = inject(QuarterlyGoalStore);
   // readonly weeklyGoalStore = inject(WeeklyGoalStore);
@@ -43,14 +43,11 @@ export class WidgetComponent implements OnInit {
   /** The current signed in user. */
   currentUser: Signal<User> = this.authStore.user;
   
-  longTermGoals: Signal<LongTermGoal[]> = computed(() => {
-    const goals = this.longTermGoal.selectEntities([
-      ['__id', '==', 'ltg'],
-    ], { orderBy: 'order' });
-
-    console.log('Computed longTermGoals:', goals);
-
-    return goals;
+  longTermGoals: Signal<LongTermGoal> = computed(() => {
+    return this.longTermGoalStore.selectFirst([
+      ['__id', '==', 'ltg']], 
+      {}
+    );
   });
 
   // longTermGoals: Signal<LongTermGoals[]> = computed(() => {
@@ -182,7 +179,8 @@ export class WidgetComponent implements OnInit {
     // Load entities to store
     
     console.log("WOMPWOMP");
-    this.longTermGoal.load([['__id', '==', 'ltg']], {});
+    console.log(this.longTermGoals)
+    this.longTermGoalStore.load([['__id', '==', 'ltg']], {});
 
   }
 }
