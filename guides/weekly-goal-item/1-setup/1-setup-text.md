@@ -1,1 +1,3 @@
 ## Text - formatted according to [the style guide](https://docs.google.com/document/d/1KrUSlkgmklM7aqRV1VmsgT0ExjKpIeLW3cDXTEVrzEM/edit?usp=sharing)
+
+This section is here to mirror the [diff guide](https://docs.google.com/document/d/1x-7JrtLswwFnXD_ggjxILC8rLLksC5IL6D9qCLLMxgo/edit), and doesn't necessarily pertain to Causeway or have a one-to-one. It's merely a presentation of the starter file for the component's TypeScript file.

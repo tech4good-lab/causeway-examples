@@ -1,5 +1,7 @@
 # Weekly Goal Item Guide - Set up
 
+## Text
+Right now, we've just started our component - Weekly Goal Item. This component is for representing an individual goal within the larger container Weekly Goals. For right now, we'll focus on the folder weekly-goal-item primarily, but we'll periodically refer to the home and weekly-goals folder as well (which weekly-goal-item) is nested in. Ultimately, we'll add more after this phase, but for right now, we'll just import the additional components we'll need from the Angular Material library in ``weekly-goal-item.component.ts``.
 ## Code
 
 ### Mandatory to this section
@@ -8,8 +10,9 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject, input, output } from '@angular/core';
 import { WeeklyGoal } from 'src/app/core/store/weekly-goal/weekly-goal.model';
 import { WeeklyGoalStore } from 'src/app/core/store/weekly-goal/weekly-goal.store';
+import { WeeklyGoalData } from '../../home.model';
 import { WeeklyGoalItemAnimations } from './weekly-goal-item.animations';
-
+import { MatCheckbox } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-weekly-goal-item',
@@ -17,13 +20,13 @@ import { WeeklyGoalItemAnimations } from './weekly-goal-item.animations';
   styleUrls: ['./weekly-goal-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [WeeklyGoalItemAnimations],
-  imports: [],
+  imports: [
+    MatCheckbox,
+  ],
   standalone: true,
 })
 export class WeeklyGoalItemComponent implements OnInit {
   // --------------- INPUTS AND OUTPUTS ------------------
-  goal = input.required<WeeklyGoalData>();
-  checked = output<WeeklyGoal>();
 
   // --------------- LOCAL AND GLOBAL STATE --------------
 

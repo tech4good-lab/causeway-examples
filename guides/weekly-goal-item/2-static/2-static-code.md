@@ -1,5 +1,9 @@
 # Weekly Goal Item Guide - Static Implementation
 
+## Text Overview
+
+In this phase, we write the html and scss for our component. We'll make use of flexbox styling to ensure this component matches its design when rendered by using ``display: flex;`` and ``flex-direction: row/column`` (for example) when appropriate, along with some padding between elements. We'll also define some SCSS variables for colors we'll use often in this file for easier readability.
+
 ## Code
 
 ### Mandatory to this section
