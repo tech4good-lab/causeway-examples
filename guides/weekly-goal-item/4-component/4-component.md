@@ -1,5 +1,9 @@
 # Weekly Goal Item Guide - Component
 
+## Text
+Now we'll revisit the output functionality of our component. When a goal is clicked (or when the checkbox of a goal is clicked), there should be some feedback displayed for the user – which will require some communication with the parent container Weekly Goals. We'll add an on click function to our component Weekly Goal Item, which will emit the checked weekly goal and its value to our parent container. The parent container will then react to this and display a snackbar at the bottom of the user's screen.
+
+
 ## Code
 
 ### Mandatory to this section
@@ -200,4 +204,3 @@ export class WeeklyGoalsComponent implements OnInit {
   </section>
 </article>
 ```
-## Text - formatted according to [the style guide](https://docs.google.com/document/d/1KrUSlkgmklM7aqRV1VmsgT0ExjKpIeLW3cDXTEVrzEM/edit?usp=sharing)

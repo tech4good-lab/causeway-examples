@@ -224,5 +224,3 @@ $card-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
 }
 ```
 - **additionally, edit.svg should show up in the diff as well in the assets folder**
-
-## Text - formatted according to [the style guide](https://docs.google.com/document/d/1KrUSlkgmklM7aqRV1VmsgT0ExjKpIeLW3cDXTEVrzEM/edit?usp=sharing)

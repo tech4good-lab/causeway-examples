@@ -1,0 +1,1 @@
+For this role, we'll be implementing the Weekly Goal Item component.

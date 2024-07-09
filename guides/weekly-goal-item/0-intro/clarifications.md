@@ -25,3 +25,6 @@ I'm assuming the following sections will stay the same from the old platform:
    }
    ```
 - Majority of "Add remaining text styles"
+
+
+...or at the very least, the sections where the walkthroughs were very general and not hyper specific to Quarter Goals in the original Causeway.

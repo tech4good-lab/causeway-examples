@@ -1,5 +1,8 @@
 # Weekly Goal Item Guide - Responsive Layout
 
+## Text
+In this section, we'll utilize media queries to ensure our app looks good on all screens since flexbox styling can only do so much for us. For smaller screens, it might better to switch up the layout entirely. For media queries, they're typically done in SCSS files with the syntax  ``@media (min-height: *insert pixel count*) {}``, but you can also track the width/height of a screen using signals, as was done in ``home.component.[html,ts]``.
+
 ## Code
 
 ### Mandatory to this section
