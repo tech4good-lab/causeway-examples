@@ -1,9 +1,9 @@
 <li class="weekly-goal">
    <mat-checkbox class="check-box"></mat-checkbox>
    <div class="goal-details">
-     <div class="goal-title">Finish Google Cover Letter</div>
+     <div class="goal-title">{{ goal().text }}</div>
      <div class="bottom-row">
-       <div class="goal-hashtag">#coverletter</div>
+       <div class="goal-hashtag">#{{ goal().hashtag.name }}</div>
      </div>
    </div>
  </li>
