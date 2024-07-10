@@ -44,15 +44,8 @@ export class WidgetComponent implements OnInit {
   currentUser: Signal<User> = this.authStore.user;
   
   longTermGoals: Signal<LongTermGoal> = computed(() => {
-    return this.longTermGoalStore.selectFirst([
-      ['__id', '==', 'ltg']], 
-      {}
-    );
+    return this.longTermGoalStore.selectEntity('ltg');
   });
-
-  // longTermGoals: Signal<LongTermGoals[]> = computed(() => {
-  //   return longTermStore.selectEntities([ /** any filters you might want to apply /], {/* if you need to order or restrict the number of docs selected*/})
-  // });
 
   // --------------- LOCAL UI STATE ----------------------
 
@@ -177,7 +170,6 @@ export class WidgetComponent implements OnInit {
 
   ngOnInit(): void {
     // Load entities to store
-    
     console.log("WOMPWOMP");
     console.log(this.longTermGoals)
     this.longTermGoalStore.load([['__id', '==', 'ltg']], {});

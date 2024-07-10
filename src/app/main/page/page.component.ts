@@ -57,6 +57,6 @@ export class PageComponent implements OnInit {
 
   ngOnInit(): void { 
     this.quarterlyGoalStore.load([], {});
-    this.longTermGoalStore.load([], {});
+    // this.longTermGoalStore.load([], {});
   }
 }
