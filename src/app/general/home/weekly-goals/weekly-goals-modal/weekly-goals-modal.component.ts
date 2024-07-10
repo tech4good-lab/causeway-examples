@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { WeeklyGoalsModalAnimations } from './weekly-goals-modal.animations';
 
 @Component({
@@ -11,6 +11,22 @@ import { WeeklyGoalsModalAnimations } from './weekly-goals-modal.animations';
   imports: [
   ],
 })
-export class WeeklyGoalsModalComponent {
+export class WeeklyGoalsModalComponent implements OnInit {
 
+  // --------------- INPUTS AND OUTPUTS ------------------
+
+  // --------------- LOCAL UI STATE ----------------------
+
+  // --------------- COMPUTED DATA -----------------------
+
+  // --------------- EVENT HANDLING ----------------------
+  
+  // --------------- OTHER -------------------------------
+
+  constructor(
+  ) { }
+
+  // --------------- LOAD AND CLEANUP --------------------
+  ngOnInit(): void {
+  }
 }
