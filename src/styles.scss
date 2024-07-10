@@ -1,0 +1,40 @@
+/* You can add global styles to this file, and also import other style files */
+$primary-color: #2DBDB1;
+
+html,
+body,
+app-root {
+  height: 100%;
+  box-sizing: border-box;
+  padding: 0;
+  overflow-x: clip;
+  margin: 0;
+  font-family: Oxygen, "Helvetica Neue", sans-serif;
+  --mdc-checkbox-selected-focus-icon-color: $primary-color;
+  --mdc-checkbox-selected-hover-icon-color: $primary-color;
+  --mdc-checkbox-selected-icon-color: $primary-color;
+  --mdc-checkbox-selected-pressed-icon-color: $primary-color;
+  --mdc-checkbox-selected-focus-state-layer-color: $primary-color;
+  --mdc-checkbox-selected-hover-state-layer-color: $primary-color;
+  --mdc-checkbox-selected-pressed-state-layer-color: $primary-color;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+body {
+  background: #F2FFFE;
+}
+
+/** Customizing checkboxes */
+.mat-mdc-checkbox .mdc-form-field .mdc-checkbox .mdc-checkbox__background {
+  border-color: $primary-color !important;
+}
+
+.mat-mdc-checkbox .mdc-form-field .mdc-checkbox .mdc-checkbox__background .mdc-checkbox__checkmark {
+  background-color: white !important;
+  color: $primary-color !important;
+}
