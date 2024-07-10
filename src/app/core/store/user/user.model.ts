@@ -13,10 +13,6 @@ export interface User {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [index: string]: any;
   };
-  isAdmin: boolean;
-  accessState: AccessState;
-  consented: boolean;
-  joinedWaitlistAt?: Timestamp;
 }
 
 export enum AccessState {
