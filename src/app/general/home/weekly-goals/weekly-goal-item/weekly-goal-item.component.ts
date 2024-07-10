@@ -49,6 +49,11 @@ export class WeeklyGoalItemComponent implements OnInit {
   // --------------- COMPUTED DATA -----------------------
 
   // --------------- EVENT HANDLING ----------------------
+
+  /** Update weekly goal. */
+  checkGoal(goal: WeeklyGoal) {
+    this.checked.emit(goal);
+  }
   
   // --------------- OTHER -------------------------------
 
