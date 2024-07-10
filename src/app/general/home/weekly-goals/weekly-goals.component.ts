@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { WeeklyGoalItemComponent } from './weekly-goal-item/weekly-goal-item.component';
 import { WeeklyGoalsModalComponent } from './weekly-goals-modal/weekly-goals-modal.component';
 import { WeeklyGoalsAnimations } from './weekly-goals.animations';
+import { MatButton } from '@angular/material/button';
+import { NgOptimizedImage, NgStyle } from '@angular/common';
 
 @Component({
   selector: 'app-weekly-goals',
@@ -11,6 +13,9 @@ import { WeeklyGoalsAnimations } from './weekly-goals.animations';
   animations: [WeeklyGoalsAnimations],
   standalone: true,
   imports: [
+    MatButton,
+    NgStyle,
+    NgOptimizedImage,
     /** component */
     WeeklyGoalItemComponent,
     WeeklyGoalsModalComponent,

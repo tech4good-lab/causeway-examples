@@ -1,0 +1,37 @@
+$goal-hover-background: rgba(204, 239, 236, 0.25);
+$divider-color: rgba(0, 0, 0, 0.15);
+
+.weekly-goal {
+  display: flex;
+  width: 100%;
+  margin: 0;
+  padding: 4px 0px;
+  border-bottom: 1px solid $divider-color;
+
+
+  &:hover {
+    background: $goal-hover-background;
+  }
+
+  .goal-details {
+    cursor: pointer;
+    flex: 1;
+    width: 100%;
+
+    .goal-title {
+      margin: 0;
+      font-size: 16px;
+      padding: 10px 0px 4px 0px;
+    }
+
+    .bottom-row {
+      display: flex;
+
+      .goal-hashtag {
+        font-size: 13px;
+        font-weight: 400;
+        color: #EE8B72;
+      }
+    }
+  }
+}
