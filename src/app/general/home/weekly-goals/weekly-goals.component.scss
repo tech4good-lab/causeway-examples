@@ -1,0 +1,84 @@
+$goal-hover-background: rgba(204, 239, 236, 0.25);
+$divider-color: rgba(0, 0, 0, 0.15);
+
+.weekly-goals-container {
+   .weekly-goals-card {
+      padding: 24px 0px 0px 10px;
+      color: #4B5853;
+
+      .desktop-goal-titles {
+         display: flex;
+         flex-direction: column;
+         width: 100%;
+      }
+
+      .goal-titles {
+         display: flex;
+         width: 100%;
+
+         .weekly-goals {
+            margin: 0;
+            font-weight: 400;
+            font-size: 28px;
+         }
+
+         .edit-weekly-goals {
+            background: none;
+            border: none;
+            align-self: flex-end;
+            justify-self: flex-end;
+            margin-left: auto;
+
+            .edit-icon {
+               width: 20px;
+               height: 20px;
+               cursor: pointer;
+            }
+         }
+      }
+
+      .goal-time {
+         margin-top: 20px;
+         font-weight: bold;
+         font-size: 21px;
+      }
+   }
+
+   .goal-list {
+      margin-top: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+
+      .no-goals {
+         margin: 8px 8px;
+         padding-top: 20px;
+         font-style: italic;
+         font-size: 16px;
+         color: #859C93;
+      }
+
+      .goal-content {
+         padding: 0;
+         margin: 0;
+         overflow-y: auto;
+         overflow-x: hidden;
+         max-height: max(100vh - 420px);
+      }
+
+      .add-goal-button {
+         flex: 1;
+         margin-top: 12px;
+         cursor: pointer;
+         display: flex;
+         padding-left: 4px;
+
+         .add-goal {
+            color: #5A5A5A;
+            font-family: 'Oxygen';
+            font-size: 16px;
+            letter-spacing: 0px;
+         }
+      }
+   }
+}

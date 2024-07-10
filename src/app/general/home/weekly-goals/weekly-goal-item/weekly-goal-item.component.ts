@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { WeeklyGoalItemAnimations } from './weekly-goal-item.animations';
+import { MatCheckbox } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-weekly-goal-item',
@@ -7,7 +8,9 @@ import { WeeklyGoalItemAnimations } from './weekly-goal-item.animations';
   styleUrls: ['./weekly-goal-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [WeeklyGoalItemAnimations],
-  imports: [],
+  imports: [
+    MatCheckbox,
+  ],
   standalone: true,
 })
 export class WeeklyGoalItemComponent implements OnInit {
