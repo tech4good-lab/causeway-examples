@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { WeeklyGoalsComponent } from "./weekly-goals/weekly-goals.component";
 import { HomeAnimations } from './home.animations';
 
@@ -13,6 +13,22 @@ import { HomeAnimations } from './home.animations';
     WeeklyGoalsComponent,
   ],
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
 
+  // --------------- INPUTS AND OUTPUTS ------------------
+
+  // --------------- LOCAL UI STATE ----------------------
+
+  // --------------- COMPUTED DATA -----------------------
+
+  // --------------- EVENT HANDLING ----------------------
+  
+  // --------------- OTHER -------------------------------
+
+  constructor(
+  ) { }
+
+  // --------------- LOAD AND CLEANUP --------------------
+  ngOnInit(): void {
+  }
 }
