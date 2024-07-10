@@ -1,10 +1,14 @@
-import { ChangeDetectionStrategy, Component, OnInit, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, Signal, inject, input, output } from '@angular/core';
 import { WeeklyGoalItemAnimations } from './weekly-goal-item.animations';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { Timestamp } from '@angular/fire/firestore';
 import { WeeklyGoalData } from '../../home.model';
 import { WeeklyGoal } from 'src/app/core/store/weekly-goal/weekly-goal.model';
 import { USER_DB } from 'src/app/core/firebase/mock-data/user.data';
+import { endOfWeek, startOfWeek } from 'src/app/core/utils/time.utils';
+import { WeeklyGoalStore } from 'src/app/core/store/weekly-goal/weekly-goal.store';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-weekly-goal-item',
@@ -19,6 +23,7 @@ import { USER_DB } from 'src/app/core/firebase/mock-data/user.data';
 })
 export class WeeklyGoalItemComponent implements OnInit {
 
+  readonly weeklyGoalStore = inject(WeeklyGoalStore);
   // --------------- INPUTS AND OUTPUTS ------------------
 
   sampleData: WeeklyGoalData = {  
@@ -41,12 +46,16 @@ export class WeeklyGoalItemComponent implements OnInit {
       _deleted: false,
     }
   };
-  goal = input<WeeklyGoalData>(this.sampleData);
+  goal: Signal<WeeklyGoalData> = toSignal(of(this.sampleData))
   checked = output<WeeklyGoal>();
 
   // --------------- LOCAL UI STATE ----------------------
 
   // --------------- COMPUTED DATA -----------------------
+
+  endOfWeek = endOfWeek; // import from time.utils.ts
+
+  startOfWeek = startOfWeek; // import from time.utils.ts
 
   // --------------- EVENT HANDLING ----------------------
 

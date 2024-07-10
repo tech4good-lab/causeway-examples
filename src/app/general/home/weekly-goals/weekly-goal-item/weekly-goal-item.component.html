@@ -1,9 +1,12 @@
+
 <li class="weekly-goal">
-   <mat-checkbox class="check-box" (click)="checkGoal(goal())"></mat-checkbox>
-   <div class="goal-details">
-     <div class="goal-title">{{ goal().text }}</div>
-     <div class="bottom-row">
-       <div class="goal-hashtag">#{{ goal().hashtag.name }}</div>
-     </div>
-   </div>
+  @if (goal()) {
+    <mat-checkbox class="check-box" (click)="checkGoal(goal())"></mat-checkbox>
+    <div class="goal-details">
+      <div class="goal-title">{{ goal().text }}</div>
+      <div class="bottom-row">
+        <div class="goal-hashtag">#{{ goal().hashtag.name }}</div>
+      </div>
+    </div>
+  }
  </li>
