@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
 
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [],
+  imports: [ MatMenuTrigger, MatMenu],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss'
 })
