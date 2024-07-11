@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { HomeAnimations } from './home.animations';
 import { NavbarComponent } from 'src/app/shared/components/navbar/navbar.component';
 
@@ -9,8 +9,26 @@ import { NavbarComponent } from 'src/app/shared/components/navbar/navbar.compone
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: HomeAnimations,
   standalone: true,
-  imports: [ NavbarComponent],
+  imports: [
+    NavbarComponent
+  ],
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
 
+  // --------------- INPUTS AND OUTPUTS ------------------
+
+  // --------------- LOCAL UI STATE ----------------------
+
+  // --------------- COMPUTED DATA -----------------------
+
+  // --------------- EVENT HANDLING ----------------------
+  
+  // --------------- OTHER -------------------------------
+
+  constructor(
+  ) { }
+
+  // --------------- LOAD AND CLEANUP --------------------
+  ngOnInit(): void {
+  }
 }
