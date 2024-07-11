@@ -1,1 +1,18 @@
-<p>navbar works!</p>
+<div class="navbar-container">
+  <img class="logo" src="assets/images/logo.svg">
+    <div class="user-setting-section">
+      <img class="profile-pic" src="http://loremflickr.com/100/100" [matMenuTriggerFor]="menu" #menuTrigger/>
+      <mat-menu #menu="matMenu">
+        <div class="logout" >
+          <span>
+            Logout
+          </span>
+          <svg width="31" height="30" viewBox="0 0 31 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M11.5002 26.25H6.50024C5.8372 26.25 5.20132 25.9866 4.73248 25.5178C4.26364 25.0489 4.00024 24.413 4.00024 23.75V6.25C4.00024 5.58696 4.26364 4.95107 4.73248 4.48223C5.20132 4.01339 5.8372 3.75 6.50024 3.75H11.5002" stroke="#2DBDB1" stroke-width="1.875" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M20.2502 21.25L26.5002 15L20.2502 8.75" stroke="#2DBDB1" stroke-width="1.875" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M26.5002 15H11.5002" stroke="#2DBDB1" stroke-width="1.875" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </mat-menu>
+    </div>  
+</div>
