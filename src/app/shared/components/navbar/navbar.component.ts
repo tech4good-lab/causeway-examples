@@ -1,5 +1,6 @@
-import { Component, OnInit, Signal } from '@angular/core';
+import { Component, inject, OnInit, Signal } from '@angular/core';
 import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
+import { AuthStore } from 'src/app/core/store/auth/auth.store';
 import { User } from 'src/app/core/store/user/user.model';
 
 
@@ -12,14 +13,12 @@ import { User } from 'src/app/core/store/user/user.model';
 })
 export class NavbarComponent implements OnInit {
 
+  readonly authStore = inject(AuthStore);
+
   // --------------- INPUTS AND OUTPUTS ------------------
 
-  samepleUserData : User = {
-    __id: 'test-user',
-    name: 'Test User',
-    email: 'test@sample.com',
-    photoURL: 'http://placekitten.com/100/100',
-  }
+  /** The current signed in user. */
+  currentUser: Signal<User> = this.authStore.user;
 
   // --------------- LOCAL UI STATE ----------------------
 
