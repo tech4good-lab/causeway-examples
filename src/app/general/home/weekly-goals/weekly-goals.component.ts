@@ -20,6 +20,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CoreModule } from 'src/app/core/core.module';
 import { MainModule } from 'src/app/main/main.module';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { endOfWeek, startOfWeek } from 'src/app/core/utils/time.utils';
 
 @Component({
   selector: 'app-weekly-goals',
@@ -44,6 +45,10 @@ export class WeeklyGoalsComponent implements OnInit {
   // --------------- LOCAL UI STATE ----------------------
 
   // --------------- COMPUTED DATA -----------------------
+
+  endOfWeek = endOfWeek; // import from time.utils.ts
+
+  startOfWeek = startOfWeek; // import from time.utils.ts
 
   // --------------- EVENT HANDLING ----------------------
   
