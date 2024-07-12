@@ -7,8 +7,14 @@ import { QuarterlyGoalStore } from 'src/app/core/store/quarterly-goal/quarterly-
 import { WeeklyGoal } from 'src/app/core/store/weekly-goal/weekly-goal.model';
 import { WeeklyGoalStore } from 'src/app/core/store/weekly-goal/weekly-goal.store';
 import { endOfWeek, startOfWeek } from 'src/app/core/utils/time.utils';
-import { WeeklyGoalData } from '../../home.model';
+import { QuarterlyGoalData, WeeklyGoalData } from '../../home.model';
 import { WeeklyGoalItemAnimations } from './weekly-goal-item.animations';
+import { NgOptimizedImage, NgStyle } from '@angular/common';
+import { WeeklyGoalsModalComponent } from '../weekly-goals-modal/weekly-goals-modal.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { Timestamp } from '@angular/fire/firestore';
+import { User } from 'src/app/core/store/user/user.model';
 
 @Component({
   selector: 'app-weekly-goal-item',
@@ -17,6 +23,8 @@ import { WeeklyGoalItemAnimations } from './weekly-goal-item.animations';
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [WeeklyGoalItemAnimations],
   imports: [
+    NgOptimizedImage,
+    NgStyle,
     MatCheckbox,
   ],
   standalone: true,
@@ -28,26 +36,38 @@ export class WeeklyGoalItemComponent implements OnInit {
   readonly quarterlyGoalStore = inject(QuarterlyGoalStore);
   // --------------- INPUTS AND OUTPUTS ------------------
 
+  /** The current signed in user. */
+  currentUser: Signal<User> = this.authStore.user;
+
   /** Data for the first weekly goal + their associated quarterly goals and hashtags. */
   goal: Signal<WeeklyGoalData> = computed(() => {
-    const weeklyGoals = this.weeklyGoalStore.selectEntities([
-    ['__userId', '==', USER_1.__id]], { orderBy: 'order' });
-    const allWeeklyGoalData = weeklyGoals.map((goal) => {
-
-      // get the quarter goal associated with that weekly goal to make updates easier
-      const quarterGoal = this.quarterlyGoalStore.selectEntity(goal.__quarterlyGoalId);
-      return Object.assign({}, goal, {
-        hashtag: this.hashtagStore.selectEntity(quarterGoal?.__hashtagId),
-        quarterGoal: quarterGoal,
-      });
+    const weeklyGoal = this.weeklyGoalStore.selectFirst([
+    ['__userId', '==', this.currentUser().__id]], { orderBy: 'order' });
+    // get the quarter goal associated with that weekly goal to make updates easier
+    const quarterGoal = this.quarterlyGoalStore.selectEntity(weeklyGoal?.__quarterlyGoalId);
+    return Object.assign({}, weeklyGoal, {
+      hashtag: this.hashtagStore.selectEntity(quarterGoal?.__hashtagId),
+      quarterGoal: quarterGoal,
     });
-    // give back some random weekly goal for database for visual variety
-    return allWeeklyGoalData[Math.floor(Math.random() * allWeeklyGoalData.length)];
 
   });
-  checked = output<WeeklyGoal>();
+  /** All quarterly goals, needed for weekly goals modal */
+  allQuarterlyGoals: Signal<Partial<QuarterlyGoalData>[]> = computed(() => {
+    const allGoals = this.quarterlyGoalStore.selectEntities([
+      ['__userId', '==', this.currentUser().__id],
+    ], { orderBy: 'order' });
+
+    return allGoals.map((goal) => {
+      return Object.assign({}, goal, {
+        hashtag: this.hashtagStore.selectEntity(goal.__hashtagId),
+      });
+    });
+  });
 
   // --------------- LOCAL UI STATE ----------------------
+
+  /** For storing the dialogRef in the opened modal. */
+  dialogRef: MatDialogRef<any>;
 
   // --------------- COMPUTED DATA -----------------------
 
@@ -58,16 +78,67 @@ export class WeeklyGoalItemComponent implements OnInit {
   // --------------- EVENT HANDLING ----------------------
 
   /** Update weekly goal. */
-  checkGoal(goal: WeeklyGoal) {
-    this.checked.emit(goal);
+  async checkGoal(goal: WeeklyGoal) {
+    try {
+      await this.weeklyGoalStore.update(goal.__id, {
+        completed: !goal.completed,
+        ...(!goal.completed ? { endDate: Timestamp.now() } : {}),
+      }, {
+        optimistic: true,
+      });
+      this.snackBar.open(
+        goal.completed ? 'Marked goal as incomplete' : 'Marked goal as complete',
+        '',
+        {
+          duration: 3000,
+          verticalPosition: 'bottom',
+          horizontalPosition: 'center',
+        },
+      );
+    } catch (e) {
+      console.error(e);
+      this.snackBar.open('Failed to update goal', '', {
+        duration: 3000,
+        verticalPosition: 'bottom',
+        horizontalPosition: 'center',
+      });
+    }
   }
+
+  /** Open add or edit goals modal for weekly goals. */
+  openModal(goal: WeeklyGoalData) {
+    this.dialogRef = this.dialog.open(WeeklyGoalsModalComponent, {
+      height: '90%',
+      width: '80%',
+      position: { bottom: '0' },
+      data: {
+        goal,
+        allQuarterlyGoals: this.allQuarterlyGoals(),
+        updateWeeklyGoal: async (weeklyGoalForm) => {
+          try {
+            if ((weeklyGoalForm.value.originalText !== weeklyGoalForm.value.text) || (weeklyGoalForm.value.originalQuarterlyGoalId !== weeklyGoalForm.value.__quarterlyGoalId)) {
+              await this.weeklyGoalStore.update(weeklyGoalForm.value.__weeklyGoalId, Object.assign({}, {
+                __quarterlyGoalId: weeklyGoalForm.value.__quarterlyGoalId,
+                text: weeklyGoalForm.value.text,
+              }));
+            }
+            this.dialogRef.close();
+          } catch (e) {
+            console.error(e);
+          }
+        },
+      },
+    });
+  }
+
   
   // --------------- OTHER -------------------------------
 
   constructor(
-    
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog,
   ) { 
-
+    // this is here for people to see what's loaded into store!
     effect(() => {
       console.log('Quarterly Goal', this.quarterlyGoalStore.entities());
     });
@@ -85,6 +156,5 @@ export class WeeklyGoalItemComponent implements OnInit {
     this.weeklyGoalStore.load([], {});
     this.quarterlyGoalStore.load([], {});
     this.hashtagStore.load([], {});
-
   }
 }

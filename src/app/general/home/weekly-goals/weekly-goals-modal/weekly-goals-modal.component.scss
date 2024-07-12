@@ -1,0 +1,99 @@
+.weekly-goals-modal-root {
+   padding: 16px;
+   box-sizing: border-box;
+   font-family: 'Oxygen', sans-serif;
+   font-size: 16px;
+ 
+   .header {
+     display: flex;
+     flex-direction: column;
+     margin-bottom: 32px;
+     padding: 20px 0 0 28px;
+     color: #4B5853;
+ 
+     .top-row {
+       display: flex;
+       align-items: center;
+ 
+       h2 {
+         margin: 0;
+         font-size: 28px;
+         font-weight: 400;
+       }
+ 
+       .close-button {
+         border: none;
+         background: none;
+         margin-left: auto;
+         margin-right: 16px;
+         transform: scale(1.4);
+       }
+     }
+ 
+     .date-range {
+       margin-top: 20px;
+       font-weight: bold;
+       font-size: 21px;
+     }
+   }
+   .weekly-goal-form {
+      display: flex;
+      flex-direction: column;
+      .goals-box {
+         margin: 16px;
+         display: flex;
+         align-items: center;
+         gap: 10px;
+
+         mat-icon {
+            margin-right: 8px;
+            height: 30px;
+            font-size: 30px;
+            color: #2dbdb1;
+            margin-bottom: 4px;
+         }
+
+         input {
+            font-size: 16px;
+            cursor: pointer !important;
+         }
+
+         .goal-input {
+            flex: 1;
+            margin-right: 8px;
+
+            mat-form-field {
+            width: 100%;
+            margin: 0;
+            background: #fff;
+            border-radius: 4px;
+            }
+         }
+      }
+
+ 
+      .add-button {
+         justify-self: flex-end;
+         font-family: 'Oxygen';
+         align-self: flex-end;
+         background: #2dbdb1;
+         color: #fff;
+         border: none;
+         border-radius: 10px;
+         cursor: pointer;
+         font-size: 18px;
+         height: 42px;
+         width: 120px;
+         margin-top: 32px;
+
+         &:hover {
+         background: #1f9e91;
+         }
+
+         &[disabled] {
+         background-color: lightgray;
+         cursor: not-allowed;
+         }
+      }
+   }
+}

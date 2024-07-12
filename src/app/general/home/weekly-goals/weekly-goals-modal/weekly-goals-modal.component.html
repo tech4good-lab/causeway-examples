@@ -1,1 +1,27 @@
-<p>weekly goals modal!</p>
+<div>
+   <mat-dialog-content class="weekly-goals-modal-root">
+      <header class="header">
+         <div class="top-row">
+           <h2>Weekly Goals</h2>
+           <button mat-icon-button class="close-button" mat-dialog-close>
+             <mat-icon>close</mat-icon>
+           </button>
+         </div>
+         <time class="date-range"><b>{{ startOfWeek() + ' - ' + endOfWeek() }}</b></time>
+       </header>
+      <form class="weekly-goal-form" [formGroup]="weeklyGoalsForm" (ngSubmit)="saveGoal()">
+         <div class="goals-box">
+            <mat-form-field class="goal-input">
+               <input matInput placeholder="Enter your goal..." formControlName="text" />
+            </mat-form-field>
+            <mat-form-field  class="goal-dropdown">
+            <mat-select placeholder="Select a hashtag" name="weekGoalHashtag" formControlName="__quarterlyGoalId">
+               <mat-option *ngFor="let entity of data.allQuarterlyGoals" [value]="entity?.__id" [style.color]="entity?.hashtag?.color">#{{entity?.hashtag?.name}}</mat-option>
+            </mat-select>
+            </mat-form-field>
+         </div>
+         <button class="add-button" type="submit" [disabled]="!weeklyGoalsForm.valid">Save</button>
+       </form>
+   </mat-dialog-content>
+
+</div>
