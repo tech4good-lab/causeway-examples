@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, OnInit, Signal, computed, effect, i
 import { MatCheckbox } from '@angular/material/checkbox';
 import { USER_1 } from 'src/app/core/firebase/mock-db.service';
 import { AuthStore } from 'src/app/core/store/auth/auth.store';
-import { HashtagStore } from 'src/app/core/store/hashtag/hashtag.store';
-import { QuarterlyGoalStore } from 'src/app/core/store/quarterly-goal/quarterly-goal.store';
+import { HashtagStore, LoadHashtag } from 'src/app/core/store/hashtag/hashtag.store';
+import { LoadQuarterlyGoal, QuarterlyGoalStore } from 'src/app/core/store/quarterly-goal/quarterly-goal.store';
 import { WeeklyGoal } from 'src/app/core/store/weekly-goal/weekly-goal.model';
 import { WeeklyGoalStore } from 'src/app/core/store/weekly-goal/weekly-goal.store';
 import { endOfWeek, startOfWeek } from 'src/app/core/utils/time.utils';
@@ -153,8 +153,10 @@ export class WeeklyGoalItemComponent implements OnInit {
   // --------------- LOAD AND CLEANUP --------------------
   ngOnInit(): void {
     // loading all weekly goals + their associated quarterly goals and hashtags
-    this.weeklyGoalStore.load([], {});
-    this.quarterlyGoalStore.load([], {});
-    this.hashtagStore.load([], {});
+    this.weeklyGoalStore.load([['__userId', '==', this.currentUser().__id], ['endDate', '>=', Timestamp.fromDate(getStartWeekDate())]], {}, (wg) => [
+      LoadQuarterlyGoal.create(this.quarterlyGoalStore, [['__id', '==', wg.__quarterlyGoalId]], {}, (qg) => [
+        LoadHashtag.create(this.hashtagStore, [['__id', '==', qg.__hashtagId]], {}),
+      ]),
+    ]);
   }
 }
