@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Signal } from '@angular/core';
 import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
+import { User } from 'src/app/core/store/user/user.model';
 
 
 @Component({
@@ -12,6 +13,13 @@ import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
 export class NavbarComponent implements OnInit {
 
   // --------------- INPUTS AND OUTPUTS ------------------
+
+  samepleUserData : User = {
+    __id: 'test-user',
+    name: 'Test User',
+    email: 'test@sample.com',
+    photoURL: 'http://placekitten.com/100/100',
+  }
 
   // --------------- LOCAL UI STATE ----------------------
 
