@@ -1,5 +1,6 @@
 <div class="navbar-container">
   <img class="logo" src="assets/images/logo.svg">
+  @if (samepleUserData) {
     <div class="user-setting-section">
       <img class="profile-pic" [src]= 'samepleUserData.photoURL' [matMenuTriggerFor]="menu" #menuTrigger/>
       <mat-menu #menu="matMenu">
@@ -15,4 +16,5 @@
         </div>
       </mat-menu>
     </div>
+  }
 </div>
