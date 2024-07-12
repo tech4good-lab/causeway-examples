@@ -12,9 +12,9 @@
    </header>
    <section class="goal-list">
        <ul class="goal-content">
-         <app-weekly-goal-item/>
-         <app-weekly-goal-item/>
-         <app-weekly-goal-item/>
+         <app-weekly-goal-item (checked)="checkGoal($event)"/>
+         <app-weekly-goal-item (checked)="checkGoal($event)"/>
+         <app-weekly-goal-item (checked)="checkGoal($event)"/>
        </ul>
      <div class="add-goal-button">
        <button mat-button aria-label="Add goal">
