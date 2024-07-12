@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnInit, Signal, computed, effect, inject, output } from '@angular/core';
 import { MatCheckbox } from '@angular/material/checkbox';
-import { USER_1 } from 'src/app/core/firebase/mock-db.service';
 import { AuthStore } from 'src/app/core/store/auth/auth.store';
 import { HashtagStore } from 'src/app/core/store/hashtag/hashtag.store';
 import { QuarterlyGoalStore } from 'src/app/core/store/quarterly-goal/quarterly-goal.store';
+import { User } from 'src/app/core/store/user/user.model';
 import { WeeklyGoal } from 'src/app/core/store/weekly-goal/weekly-goal.model';
 import { WeeklyGoalStore } from 'src/app/core/store/weekly-goal/weekly-goal.store';
 import { endOfWeek, startOfWeek } from 'src/app/core/utils/time.utils';
