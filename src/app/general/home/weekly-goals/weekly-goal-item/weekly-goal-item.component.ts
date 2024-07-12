@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnInit, Signal, computed, effect, inject, output } from '@angular/core';
 import { MatCheckbox } from '@angular/material/checkbox';
-import { USER_1 } from 'src/app/core/firebase/mock-db.service';
 import { AuthStore } from 'src/app/core/store/auth/auth.store';
 import { HashtagStore } from 'src/app/core/store/hashtag/hashtag.store';
 import { QuarterlyGoalStore } from 'src/app/core/store/quarterly-goal/quarterly-goal.store';
+import { User } from 'src/app/core/store/user/user.model';
 import { WeeklyGoal } from 'src/app/core/store/weekly-goal/weekly-goal.model';
 import { WeeklyGoalStore } from 'src/app/core/store/weekly-goal/weekly-goal.store';
 import { endOfWeek, startOfWeek } from 'src/app/core/utils/time.utils';
@@ -28,10 +28,13 @@ export class WeeklyGoalItemComponent implements OnInit {
   readonly quarterlyGoalStore = inject(QuarterlyGoalStore);
   // --------------- INPUTS AND OUTPUTS ------------------
 
+  /** The current signed in user. */
+  currentUser: Signal<User> = this.authStore.user;
+
   /** Data for the first weekly goal + their associated quarterly goals and hashtags. */
   goal: Signal<WeeklyGoalData> = computed(() => {
     const weeklyGoals = this.weeklyGoalStore.selectEntities([
-    ['__userId', '==', USER_1.__id]], { orderBy: 'order' });
+    ['__userId', '==', this.currentUser().__id]], { orderBy: 'order' });
     const allWeeklyGoalData = weeklyGoals.map((goal) => {
 
       // get the quarter goal associated with that weekly goal to make updates easier
@@ -85,6 +88,5 @@ export class WeeklyGoalItemComponent implements OnInit {
     this.weeklyGoalStore.load([], {});
     this.quarterlyGoalStore.load([], {});
     this.hashtagStore.load([], {});
-
   }
 }
