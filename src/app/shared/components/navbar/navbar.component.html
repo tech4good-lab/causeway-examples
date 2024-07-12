@@ -4,7 +4,7 @@
     <div class="user-setting-section">
       <img class="profile-pic" [src]= 'currentUser().photoURL' [matMenuTriggerFor]="menu" #menuTrigger/>
       <mat-menu #menu="matMenu">
-        <div class="logout">
+        <div class="logout" (click)="logout()">
           <span>
             Logout
           </span>

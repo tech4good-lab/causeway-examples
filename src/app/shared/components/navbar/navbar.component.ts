@@ -25,6 +25,11 @@ export class NavbarComponent implements OnInit {
   // --------------- COMPUTED DATA -----------------------
 
   // --------------- EVENT HANDLING ----------------------
+
+  /** Logout. */
+  logout() {
+    this.authStore.logout();
+  }
   
   // --------------- OTHER -------------------------------
 
