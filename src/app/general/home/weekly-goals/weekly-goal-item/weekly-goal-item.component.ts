@@ -1,14 +1,13 @@
-import { ChangeDetectionStrategy, Component, OnInit, Signal, inject, input, output } from '@angular/core';
-import { WeeklyGoalItemAnimations } from './weekly-goal-item.animations';
-import { MatCheckbox } from '@angular/material/checkbox';
-import { Timestamp } from '@angular/fire/firestore';
-import { WeeklyGoalData } from '../../home.model';
-import { WeeklyGoal } from 'src/app/core/store/weekly-goal/weekly-goal.model';
-import { USER_DB } from 'src/app/core/firebase/mock-data/user.data';
-import { endOfWeek, startOfWeek } from 'src/app/core/utils/time.utils';
-import { WeeklyGoalStore } from 'src/app/core/store/weekly-goal/weekly-goal.store';
+import { ChangeDetectionStrategy, Component, OnInit, Signal, inject, output } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { Timestamp } from '@angular/fire/firestore';
+import { MatCheckbox } from '@angular/material/checkbox';
 import { of } from 'rxjs';
+import { WeeklyGoal } from 'src/app/core/store/weekly-goal/weekly-goal.model';
+import { WeeklyGoalStore } from 'src/app/core/store/weekly-goal/weekly-goal.store';
+import { endOfWeek, startOfWeek } from 'src/app/core/utils/time.utils';
+import { WeeklyGoalData } from '../../home.model';
+import { WeeklyGoalItemAnimations } from './weekly-goal-item.animations';
 
 @Component({
   selector: 'app-weekly-goal-item',
@@ -28,7 +27,7 @@ export class WeeklyGoalItemComponent implements OnInit {
 
   sampleData: WeeklyGoalData = {  
     __id: 'wg1',
-    __userId: USER_DB[0].__id,
+    __userId: 'test-user',
     __quarterlyGoalId: 'qg1',
     __hashtagId: 'ht1',
     text: 'Finish Google cover letter',
