@@ -34,4 +34,17 @@ $divider-color: rgba(0, 0, 0, 0.15);
       }
     }
   }
+
+  .edit-weekly-goals {
+    background: none;
+    border: none;
+    align-self: center;
+    margin-left: auto;
+
+    .edit-icon {
+       width: 20px;
+       height: 20px;
+       cursor: pointer;
+    }
+ }
 }

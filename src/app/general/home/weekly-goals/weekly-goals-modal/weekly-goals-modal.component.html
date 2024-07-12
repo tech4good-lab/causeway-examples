@@ -1,1 +1,18 @@
-<p>weekly goals modal!</p>
+<div>
+   <mat-dialog-content class="weekly-goals-modal-root">
+      <header class="header">
+         <div class="top-row">
+           <h2>Weekly Goals</h2>
+           <button mat-icon-button class="close-button" mat-dialog-close>
+             <mat-icon>close</mat-icon>
+           </button>
+         </div>
+         <time class="date-range"><b>{{ startOfWeek() + ' - ' + endOfWeek() }}</b></time>
+      </header>
+      <div class="placeholder">
+         <div>This goal's text: {{this.data.goal.text}}</div>
+         <div>This goal's hashtag: #{{this.data.goal.hashtag.name}}</div>
+      </div>
+   </mat-dialog-content>
+
+</div>

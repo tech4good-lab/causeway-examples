@@ -3,18 +3,13 @@
      <div class="desktop-goal-titles">
        <div class="goal-titles">
          <div class="weekly-goals">Weekly Goals</div>
-         <button class="edit-weekly-goals" aria-label="Edit goals">
-           <img class="edit-icon" ngSrc="../../../assets/images/edit.svg" alt="Edit" height="16" width="16"/>
-         </button>
        </div>
        <div class="goal-time">7/7 - 7/13</div>
      </div>
    </header>
    <section class="goal-list">
        <ul class="goal-content">
-         <app-weekly-goal-item (checked)="checkGoal($event)"/>
-         <app-weekly-goal-item (checked)="checkGoal($event)"/>
-         <app-weekly-goal-item (checked)="checkGoal($event)"/>
+         <app-weekly-goal-item/>
        </ul>
      <div class="add-goal-button">
        <button mat-button aria-label="Add goal">

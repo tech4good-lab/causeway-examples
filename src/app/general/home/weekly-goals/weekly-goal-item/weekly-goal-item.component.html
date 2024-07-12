@@ -1,12 +1,15 @@
 
 <li class="weekly-goal">
   @if (goal()) {
-    <mat-checkbox class="check-box" (click)="checkGoal(goal())"></mat-checkbox>
+    <mat-checkbox class="check-box" [checked]="goal().completed" (click)="checkGoal(goal())"></mat-checkbox>
     <div class="goal-details">
       <div class="goal-title">{{ goal().text }}</div>
       <div class="bottom-row">
-        <div class="goal-hashtag">#{{ goal().hashtag.name }}</div>
+        <div class="goal-hashtag">#{{ goal().hashtag?.name }}</div>
       </div>
     </div>
+    <button class="edit-weekly-goals" aria-label="Edit goals" (click)="openModal(goal())">
+      <img class="edit-icon" ngSrc="../../../../assets/images/edit.svg" alt="Edit" height="16" width="16"/>
+    </button>
   }
  </li>

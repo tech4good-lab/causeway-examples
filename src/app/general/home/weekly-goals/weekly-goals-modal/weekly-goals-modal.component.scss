@@ -1,0 +1,43 @@
+.weekly-goals-modal-root {
+   padding: 16px;
+   box-sizing: border-box;
+   font-family: 'Oxygen', sans-serif;
+   font-size: 16px;
+ 
+   .header {
+     display: flex;
+     flex-direction: column;
+     margin-bottom: 32px;
+     padding: 20px 0 0 28px;
+     color: #4B5853;
+ 
+     .top-row {
+       display: flex;
+       align-items: center;
+ 
+       h2 {
+         margin: 0;
+         font-size: 28px;
+         font-weight: 400;
+       }
+ 
+       .close-button {
+         border: none;
+         background: none;
+         margin-left: auto;
+         margin-right: 16px;
+         transform: scale(1.4);
+       }
+     }
+ 
+     .date-range {
+       margin-top: 20px;
+       font-weight: bold;
+       font-size: 21px;
+     }
+   }
+   // just here for this part of the tutorial !
+   .placeholder {
+      padding: 20px 0 0 28px;
+   }
+}

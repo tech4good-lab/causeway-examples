@@ -17,6 +17,27 @@ app-root {
   --mdc-checkbox-selected-focus-state-layer-color: $primary-color;
   --mdc-checkbox-selected-hover-state-layer-color: $primary-color;
   --mdc-checkbox-selected-pressed-state-layer-color: $primary-color;
+
+}
+
+.mat-mdc-tab-header {
+  --mat-tab-header-active-label-text-color: #4B5853;
+  --mat-tab-header-active-ripple-color: rgba(204, 239, 236, 0.25);
+  --mat-tab-header-inactive-ripple-color: rgba(204, 239, 236, 0.25);
+  --mdc-tab-indicator-active-indicator-color: #4B5853;
+  --mat-tab-header-disabled-ripple-color: rgba(0, 0, 0, 0.38);
+  --mat-tab-header-pagination-icon-color: black;
+  --mat-tab-header-inactive-label-text-color: rgba(0, 0, 0, 0.6);
+  --mat-tab-header-active-label-text-color: #4B5853;
+  --mat-tab-header-active-ripple-color: #4B5853;
+  --mat-tab-header-inactive-ripple-color: #4B5853;
+  --mat-tab-header-inactive-focus-label-text-color: rgba(0, 0, 0, 0.6);
+  --mat-tab-header-inactive-hover-label-text-color: rgba(0, 0, 0, 0.6);
+  --mat-tab-header-active-focus-label-text-color: #4B5853;
+  --mat-tab-header-active-hover-label-text-color: #4B5853;
+  --mat-tab-header-active-focus-indicator-color: #4B5853;
+  --mat-tab-header-active-hover-indicator-color: #4B5853;
+
 }
 
 *,
@@ -29,6 +50,21 @@ body {
   background: #F2FFFE;
 }
 
+.mat-mdc-dialog-container {
+  width: 100vw;
+}
+
+.mat-mdc-dialog-content {
+  /*change the default size of modal*/
+  max-height: initial;
+}
+
+.mat-mdc-tab.mdc-tab {
+  padding: 0px;
+  font-size: 18px;
+  font-family: 'Oxygen', sans-serif;
+}
+
 /** Customizing checkboxes */
 .mat-mdc-checkbox .mdc-form-field .mdc-checkbox .mdc-checkbox__background {
   border-color: $primary-color !important;
@@ -37,4 +73,31 @@ body {
 .mat-mdc-checkbox .mdc-form-field .mdc-checkbox .mdc-checkbox__background .mdc-checkbox__checkmark {
   background-color: white !important;
   color: $primary-color !important;
+}
+
+/** Manipulate initial background color */
+.mdc-text-field--filled:not(.mdc-text-field--disabled) {
+  background-color: white !important;
+}
+
+/** Manipulate background color on hover and focus */
+.mat-mdc-form-field-focus-overlay {
+  background-color: transparent !important;
+}
+
+.mat-mdc-form-field-subscript-wrapper {
+  display: none;
+}
+
+.mat-form-field-flex>.mat-form-field-infix {
+  padding: 0px 0px !important;
+}
+
+/** For drag and drop global styles */
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
