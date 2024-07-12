@@ -33,18 +33,6 @@ export class WeeklyGoalsComponent implements OnInit {
 
   // --------------- EVENT HANDLING ----------------------
 
-    /** Update weekly goal. */
-    async checkGoal(goal: WeeklyGoal) {
-      this.snackBar.open(
-        `Clicked on goal "${goal.text}"`,
-        '',
-        {
-          duration: 3000,
-          verticalPosition: 'bottom',
-          horizontalPosition: 'center',
-        },
-    );
-    }
   
   // --------------- OTHER -------------------------------
 
